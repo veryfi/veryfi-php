@@ -1,0 +1,56 @@
+name: Veryfi-php main update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  tests:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+
+      fail-fast: false
+
+      matrix:
+        os:
+          - ubuntu-latest
+
+        php-version:
+          - "8.0"
+          - "8.1"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name : Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist
+
+      - name: PHPUnit tests
+        run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text --coverage-clover=report.xml
+
+      - name: Generate Badges
+        run: cd metrics && python ./generate_badges.py && cd ..
+
+      - name: Commit Code Coverage Image to Repo
+        if: matrix.php-version == '8.0'
+        uses: EndBug/add-and-commit@v5
+        with:
+          author_name: Github actions
+          author_email: veryfi@veryfi.com
+          message: "Update report"
+          add: "./metrics"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

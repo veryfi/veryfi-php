@@ -1,0 +1,45 @@
+name: PHP Unit testing
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+
+  tests:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+
+      fail-fast: false
+
+      matrix:
+        os:
+          - ubuntu-latest
+
+        php-version:
+          - "8.0"
+          - "8.1"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist
+
+      - name: PHPUnit tests
+        run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text --coverage-clover=report.xml
+
+      - name: Generate Badges
+        run: cd metrics && python ./generate_badges.py && cd ..
