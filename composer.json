@@ -26,21 +26,11 @@
   },
 
   "autoload": {
-    "psr-4": {
-      "Veryfi\\": "src/"
-    },
-    "files": [
-      "src/Client.php"
-    ]
+    "classmap": ["src/"]
   },
 
   "autoload-dev": {
-    "psr-4": {
-      "Veryfi\\": "src/"
-    },
-    "files": [
-      "src/Client.php"
-    ]
+    "classmap": ["src/"]
   },
 
   "config": {
