@@ -20,9 +20,9 @@ def main():
 def number_to_badge(number):
 
     color = get_color(number)
-    number *= 100
-    if number % 10 == 0:
+    if number == 1:
         return str(number) + "%25", color
+    number *= 100
     return str(round(number, 1)) + "%25", color
 
 
