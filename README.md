@@ -12,6 +12,11 @@ https://veryfi.github.io/veryfi-php/
 **Veryfi** is a php module for communicating with the [Veryfi OCR API](https://veryfi.com/api/)
 
 ## Installation
+In your project root run
+```bash
+composer require veryfi/veryfi-php
+```
+
 
 ## Getting Started
 
