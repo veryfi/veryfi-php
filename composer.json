@@ -26,11 +26,15 @@
   },
 
   "autoload": {
-    "classmap": ["src/"]
+    "psr-4": {
+      "veryfi\\": "src/veryfi/"
+    }
   },
 
   "autoload-dev": {
-    "classmap": ["src/"]
+    "psr-4": {
+      "veryfi\\": "src/veryfi/"
+    }
   },
 
   "config": {
