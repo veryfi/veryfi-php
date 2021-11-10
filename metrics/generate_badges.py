@@ -23,20 +23,18 @@ def number_to_badge(number):
     number *= 100
     if number % 10 == 0:
         return str(number) + "%25", color
-    else:
-        return str(round(number, 1)) + "%25", color
+    return str(round(number, 1)) + "%25", color
 
 
 def get_color(number):
 
     if number < 0.6:
         return "red"
-    elif number < 0.8:
+    if number < 0.8:
         return "yellow"
-    elif number < 0.92:
+    if number < 0.92:
         return "green"
-    else:
-        return "brightgreen"
+    return "brightgreen"
 
 
 def verify_unit_tests(number):

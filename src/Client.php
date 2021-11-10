@@ -1,6 +1,7 @@
 <?php
 
 namespace veryfi;
+
 use CurlHandle;
 
 /**

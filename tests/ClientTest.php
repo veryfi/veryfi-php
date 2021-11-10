@@ -5,11 +5,12 @@ use veryfi\Client;
 
 final class ClientTest extends TestCase
 {
-    public string $client_id = 'client_id';
-    public string $client_secret = 'client_secret';
-    public string $username = 'username';
-    public string $api_key = 'api_key';
-    public bool $mock_responses = true;
+    private string $client_id = 'client_id';
+    private string $client_secret = 'client_secret';
+    private string $username = 'username';
+    private string $api_key = 'api_key';
+    private string $receipt_path = __DIR__ . '/resources/receipt.jpeg';
+    private bool $mock_responses = true;
 
     public function test_get_documents(): void
     {
@@ -78,7 +79,7 @@ final class ClientTest extends TestCase
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
         $categories = array('Advertising & Marketing', 'Automotive');
-        $file = __DIR__ . '/resources/receipt.jpeg';
+        $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, true), true);
         $this->assertEquals('In-n-out Burger', $json_response['vendor']['name']);
     }
@@ -149,7 +150,7 @@ final class ClientTest extends TestCase
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
         $categories = array('Advertising & Marketing', 'Automotive');
-        $file = __DIR__ . '/resources/receipt.jpeg';
+        $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, false), true);
         $id = $json_response['id'];
         $delete_json_response = json_decode($veryfi_client->delete_document($id));
@@ -164,7 +165,7 @@ final class ClientTest extends TestCase
                 ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
                 ->getMock();
 
-            $file_path = __DIR__ . '/resources/processDocumentUrl.json';
+            $file_path = __DIR__ . '/resources/processDocument.json';
             $file = fopen($file_path, 'r');
             $file_data = utf8_encode(fread($file, filesize($file_path)));
             $veryfi_client->expects($this->once())
@@ -174,9 +175,9 @@ final class ClientTest extends TestCase
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
-        $url = 'https://cdn.veryfi.com/receipts/92233902-c94a-491d-a4f9-0d61f9407cd2.pdf';
+        $url = 'https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg';
         $json_response = json_decode($veryfi_client->process_document_url($url, null, null, true, 1), true);
-        $this->assertEquals('Rumpke Of Ohio', $json_response['vendor']['name']);
+        $this->assertEquals('In-n-out Burger', $json_response['vendor']['name']);
     }
 
     public function test_bad_credentials(): void
