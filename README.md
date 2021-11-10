@@ -29,6 +29,13 @@ The **Veryfi** library can be used to communicate with Veryfi API. All available
 Below is the sample script using **Veryfi** to OCR and extract data from a document:
 
 ### Process a document
+
+You need require autoload.
+
+```php
+require_once "path_to_your_vendor_autoload";
+```
+Then you can use our API.
 ```php
 use veryfi\Client;
 
