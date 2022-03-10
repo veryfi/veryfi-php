@@ -333,4 +333,28 @@ class Client
         $endpoint_name = "/documents/$document_id/";
         return $this->request('PUT', $endpoint_name, $fields_to_update);
     }
+
+    /**
+     * Verify the signature from a webhook.
+     *
+     * @param array $payload_params the payload params returned by the webhook.
+     * @param string $client_secret your client secret.
+     * @param string $client_signature x-veryfi-signature header.
+     * @return bool returns true if the signature is valid else false.
+     */
+    public static function verify_signature(array $payload_params,
+                                            string $client_secret,
+                                            string $client_signature): bool
+    {
+        $payload = "";
+        foreach ($payload_params as $key => $value) {
+            if (gettype($value) == gettype(array())) {
+                $value = json_encode($value);
+            }
+            $payload = strlen($payload) > 0 ? "$payload,$key:$value" : "$key:$value";
+        }
+        $temporary_signature = hash_hmac('sha256', $payload, $client_secret, true);
+        $signature = trim(utf8_decode(base64_encode($temporary_signature)));
+        return $client_signature == $signature;
+    }
 }
