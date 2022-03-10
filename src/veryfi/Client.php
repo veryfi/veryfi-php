@@ -160,13 +160,28 @@ class Client
                                         string $timestamp): string
     {
         $payload = "timestamp:$timestamp";
+        return Client::generate_custom_signature($payload_params, $payload, $this->client_secret);
+    }
+
+    /**
+     * Generate unique signature for payload params with init payload.
+     *
+     * @param array $payload_params Associative array params to be sent to API request.
+     * @param string $payload init payload
+     * @param string $client_secret your client secret
+     * @return string Unique signature generated using the client_secret and the payload.
+     */
+    private static function generate_custom_signature(array $payload_params,
+                                                      string $payload,
+                                                      string $client_secret): string
+    {
         foreach ($payload_params as $key => $value) {
             if (gettype($value) == gettype(array())) {
                 $value = json_encode($value);
             }
-            $payload = "$payload,$key:$value";
+            $payload = strlen($payload) > 0 ? "$payload,$key:$value" : "$key:$value";
         }
-        $temporary_signature = hash_hmac('sha256', $payload, $this->client_secret, true);
+        $temporary_signature = hash_hmac('sha256', $payload, $client_secret, true);
         return trim(utf8_decode(base64_encode($temporary_signature)));
     }
 
@@ -346,15 +361,7 @@ class Client
                                             string $client_secret,
                                             string $client_signature): bool
     {
-        $payload = "";
-        foreach ($payload_params as $key => $value) {
-            if (gettype($value) == gettype(array())) {
-                $value = json_encode($value);
-            }
-            $payload = strlen($payload) > 0 ? "$payload,$key:$value" : "$key:$value";
-        }
-        $temporary_signature = hash_hmac('sha256', $payload, $client_secret, true);
-        $signature = trim(utf8_decode(base64_encode($temporary_signature)));
+        $signature = Client::generate_custom_signature($payload_params, "", $client_secret);
         return $client_signature == $signature;
     }
 }
