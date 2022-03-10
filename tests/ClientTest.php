@@ -180,6 +180,14 @@ final class ClientTest extends TestCase
         $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
     }
 
+    public function test_validate_signature(): void
+    {
+        $client_signature = "5GTPdqhoIWM3tqc4UORon7hKVFiGPzgnxjpD+EMXIss=";
+        $client_secret = "faKEaIoa8pQmn8twtKRp3u1c6yp9xiwS79YLwVTIlVYFEsvAR2yN46InrZl8eIqpfwV6n6b6eoKS8khO4r45GvS0tZaOwjV70RZaSx7Cug50d3HDrIk5jPyRfhjsgrpW";
+        $payload = array("event" => "document.created", "data" => array("id" => 123456789, "created" => "2021-10-20 15:27:26"));
+        $this->assertTrue(Client::verify_signature($payload["data"], $client_secret, $client_signature));
+    }
+
     public function test_bad_credentials(): void
     {
         $veryfi_client = new Client('', '', '', '');
