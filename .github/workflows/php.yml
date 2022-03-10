@@ -37,7 +37,7 @@ jobs:
           tools: none
 
       - name: Install dependencies
-        run: composer install --prefer-dist
+        run: composer install --prefer-dist --ignore-platform-reqs
 
       - name: PHPUnit tests
         run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text --coverage-clover=report.xml
