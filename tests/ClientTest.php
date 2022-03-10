@@ -81,7 +81,7 @@ final class ClientTest extends TestCase
         $categories = array('Advertising & Marketing', 'Automotive');
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, true), true);
-        $this->assertEquals('In-n-out Burger', $json_response['vendor']['name']);
+        $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
     }
 
     private function generate_random_string(): string
@@ -177,7 +177,7 @@ final class ClientTest extends TestCase
         }
         $url = 'https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg';
         $json_response = json_decode($veryfi_client->process_document_url($url, null, null, true, 1), true);
-        $this->assertEquals('In-n-out Burger', $json_response['vendor']['name']);
+        $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
     }
 
     public function test_bad_credentials(): void
