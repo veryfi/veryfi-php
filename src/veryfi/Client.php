@@ -167,7 +167,7 @@ class Client
             $payload = "$payload,$key:$value";
         }
         $temporary_signature = hash_hmac('sha256', $payload, $this->client_secret, true);
-        return str_replace(' ', '', utf8_decode(base64_encode($temporary_signature)));
+        return trim(utf8_decode(base64_encode($temporary_signature)));
     }
 
     /**
