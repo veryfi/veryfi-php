@@ -2,7 +2,6 @@
 
 namespace veryfi;
 
-use CurlHandle;
 
 /**
  * Veryfi-sdk for php
@@ -223,7 +222,7 @@ class Client
      * @param CurlHandle $curl Curl handle of request.
      * @return string A JSON response.
      */
-    protected function exec_curl(CurlHandle $curl): string
+    protected function exec_curl($curl): string
     {
         return curl_exec($curl);
     }
