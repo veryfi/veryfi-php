@@ -2,7 +2,7 @@ https://veryfi.github.io/veryfi-php/
 
 ![Veryfi Logo](https://cdn.veryfi.com/logos/veryfi-logo-wide-github.png)
 
-[![php - version](https://img.shields.io/badge/php->=8-8892BF)](https://www.php.net/releases/8.0/en.php)
+[![php - version](https://img.shields.io/badge/php->=7.4-8892BF)](https://www.php.net/releases/8.0/en.php)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![code coverage](./metrics/code_coverage.svg)](./metrics/code_coverage.svg)
 [![methods coverage](./metrics/methods_coverage.svg)](./metrics/methods_coverage.svg)

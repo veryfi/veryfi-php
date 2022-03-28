@@ -81,7 +81,7 @@ final class ClientTest extends TestCase
         $categories = array('Advertising & Marketing', 'Automotive');
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, true), true);
-        $this->assertEquals('In-n-out Burger', $json_response['vendor']['name']);
+        $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
     }
 
     private function generate_random_string(): string
@@ -177,7 +177,15 @@ final class ClientTest extends TestCase
         }
         $url = 'https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg';
         $json_response = json_decode($veryfi_client->process_document_url($url, null, null, true, 1), true);
-        $this->assertEquals('In-n-out Burger', $json_response['vendor']['name']);
+        $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
+    }
+
+    public function test_validate_signature(): void
+    {
+        $client_signature = "m89UF6aTlce2YcVbGw5LTZuA+bc5MPVS9AOicjkS7qM=";
+        $client_secret = "fAKEB2oJMLbHwBN5jEd6h3f3Lj1o9gK5kcz2xAf8Kyi2X1PNaJ6F612344YcOsSllGkFAkeUiZV5ZTNoPkk6bXyctGGAdfcratu4Dl2CA2XtU6En5icHxjVRUNoSFGP";
+        $payload = array("event" => "document.created", "data" => array("id" => 63184393, "created" => "2022-03-28 21:12:14"));
+        $this->assertTrue(Client::verify_signature($payload["data"], $client_secret, $client_signature));
     }
 
     public function test_bad_credentials(): void

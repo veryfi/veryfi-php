@@ -2,7 +2,6 @@
 
 namespace veryfi;
 
-use CurlHandle;
 
 /**
  * Veryfi-sdk for php
@@ -167,7 +166,7 @@ class Client
             $payload = "$payload,$key:$value";
         }
         $temporary_signature = hash_hmac('sha256', $payload, $this->client_secret, true);
-        return str_replace(' ', '', utf8_decode(base64_encode($temporary_signature)));
+        return trim(utf8_decode(base64_encode($temporary_signature)));
     }
 
     /**
@@ -208,7 +207,7 @@ class Client
      * @param CurlHandle $curl Curl handle of request.
      * @return string A JSON response.
      */
-    protected function exec_curl(CurlHandle $curl): string
+    protected function exec_curl($curl): string
     {
         return curl_exec($curl);
     }
@@ -332,5 +331,33 @@ class Client
     {
         $endpoint_name = "/documents/$document_id/";
         return $this->request('PUT', $endpoint_name, $fields_to_update);
+    }
+
+    /**
+     * Verify the signature from a webhook.
+     *
+     * @param array $payload_params the payload params returned by the webhook.
+     * @param string $client_secret your client secret.
+     * @param string $client_signature x-veryfi-signature header.
+     * @return bool returns true if the signature is valid else false.
+     */
+    public static function verify_signature(array $payload_params,
+                                            string $client_secret,
+                                            string $client_signature): bool
+    {
+        $payload = "";
+        foreach ($payload_params as $key => $value) {
+            if (gettype($value) == gettype(array())) {
+                $value = json_encode($value);
+            }
+            if (gettype($value) == gettype("")) {
+                $value = "'$value'";
+            }
+            $payload = strlen($payload) > 0 ? "$payload, '$key': $value" : "'$key': $value";
+        }
+        $payload = "{{$payload}}";
+        $temporary_signature = hash_hmac('SHA256', $payload, $client_secret, true);
+        $signature = trim(utf8_decode(base64_encode($temporary_signature)));
+        return $signature == $client_signature;
     }
 }

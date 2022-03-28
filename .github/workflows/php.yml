@@ -20,8 +20,10 @@ jobs:
           - ubuntu-latest
 
         php-version:
+          - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
 
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +38,7 @@ jobs:
           tools: none
 
       - name: Install dependencies
-        run: composer install --prefer-dist
+        run: composer install --prefer-dist --ignore-platform-reqs
 
       - name: PHPUnit tests
         run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text --coverage-clover=report.xml
