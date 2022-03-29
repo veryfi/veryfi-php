@@ -347,9 +347,6 @@ class Client
     {
         $payload = "";
         foreach ($payload_params as $key => $value) {
-            if (gettype($value) == gettype(array())) {
-                $value = json_encode($value);
-            }
             if (gettype($value) == gettype("")) {
                 $value = "'$value'";
             }
