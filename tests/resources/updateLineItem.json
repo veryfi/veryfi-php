@@ -1,0 +1,22 @@
+{
+  "date":"2020-08-03",
+  "description":"TEST",
+  "discount":0.0,
+  "discount_rate":0.0,
+  "end_date":"",
+  "full_description":"08/03/20 FL CASTER SVC",
+  "hsn":"",
+  "id":101170751,
+  "order":4,
+  "price":4.0,
+  "quantity":1.0,
+  "section":"",
+  "sku":"",
+  "start_date":"",
+  "tax":0.0,
+  "total":5.0,
+  "type":"service",
+  "unit_of_measure":"",
+  "upc":null,
+  "weight":""
+}
