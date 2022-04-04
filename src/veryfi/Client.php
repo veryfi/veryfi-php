@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 namespace veryfi;
 
 
@@ -128,7 +129,7 @@ class Client
     private function get_headers(): array
     {
         return array(
-            'User-Agent' => 'php veryfi-php/1.0.0',
+            'User-Agent' => 'php veryfi-php/1.0.2',
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Client-ID' => $this->client_id,
@@ -331,6 +332,94 @@ class Client
     {
         $endpoint_name = "/documents/$document_id/";
         return $this->request('PUT', $endpoint_name, $fields_to_update);
+    }
+
+    /**
+     * Retrieve all line items for a document.
+     *
+     * @param int $document_id ID of the document you'd like to retrieve
+     * @return string List of line items extracted from the document as string
+     */
+    public function get_line_items(int $document_id): string
+    {
+        $endpoint_name = "/documents/$document_id/line-items/";
+        $request_arguments = array();
+        return $this->request('GET', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Retrieve a line item for existing document by ID.
+     *
+     * @param int $document_id ID of the document you'd like to retrieve
+     * @param int $line_item_id ID of the line item you'd like to retrieve
+     * @return string Line item extracted from the document as string
+     */
+    public function get_line_item(int $document_id,
+                                  int $line_item_id): string
+    {
+        $endpoint_name = "/documents/$document_id/line-items/$line_item_id";
+        $request_arguments = array();
+        return $this->request('GET', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Add a new line item on an existing document
+     *
+     * @param int $document_id ID of the document you'd like to update
+     * @param AddLineItem $payload line item object to add
+     * @return string Added line item data
+     */
+    public function add_line_item(int $document_id,
+                                  AddLineItem $payload): string
+    {
+        $endpoint_name = "/documents/$document_id/line-items/";
+        $request_arguments = array_filter(get_object_vars($payload), static function($var){return $var !== null;});
+        return $this->request('POST', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Update an existing line item on an existing document.
+     *
+     * @param int $document_id ID of the document you'd like to update
+     * @param int $line_item_id ID of the line item you'd like to update
+     * @param UpdateLineItem $payload line item object to update
+     * @return string Line item data with updated fields, if fields are writable. Otherwise line item data with unchanged fields.
+     */
+    public function update_line_item(int $document_id,
+                                     int $line_item_id,
+                                     UpdateLineItem $payload): string
+    {
+        $endpoint_name = "/documents/$document_id/line-items/$line_item_id";
+        $request_arguments = array_filter(get_object_vars($payload), static function($var){return $var !== null;});
+        return $this->request('PUT', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Delete all line items on an existing document.
+     *
+     * @param int $document_id  ID of the document you'd like to delete
+     * @return string A JSON response.
+     */
+    public function delete_line_items(int $document_id): string
+    {
+        $endpoint_name = "/documents/$document_id/line-items/";
+        $request_arguments = array();
+        return $this->request('DELETE', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Delete an existing line item on an existing document.
+     *
+     * @param int $document_id ID of the document you'd like to delete
+     * @param int $line_item_id ID of the line item you'd like to delete
+     * @return string A JSON response.
+     */
+    public function delete_line_item(int $document_id,
+                                     int $line_item_id): string
+    {
+        $endpoint_name = "/documents/$document_id/line-items/$line_item_id";
+        $request_arguments = array();
+        return $this->request('DELETE', $endpoint_name, $request_arguments);
     }
 
     /**
