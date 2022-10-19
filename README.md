@@ -46,7 +46,7 @@ $veryfi_client = new Client($client_id, $client_secret, $username, $api_key);
 $categories = array('Advertising & Marketing', 'Automotive');
 $file = 'path_to_your_image';
 $return_associative = true;
-$delete_after_processing = true;
+$delete_after_processing = false;
 $json_response = json_decode($veryfi_client->process_document($file, $categories, $delete_after_processing), $return_associative);
 ``` 
 
