@@ -12,7 +12,7 @@ final class ClientTest extends TestCase
     private string $client_secret = 'client_secret';
     private string $username = 'username';
     private string $api_key = 'api_key';
-    private string $receipt_path = __DIR__ . '/resources/receipt.jpeg';
+    private string $receipt_path = __DIR__ . '/resources/receipt.jpg';
     private bool $mock_responses = true;
 
     public function test_get_documents(): void
@@ -52,7 +52,7 @@ final class ClientTest extends TestCase
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
-            $document_id = 31727276;
+            $document_id = 125661908;
 
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
@@ -81,7 +81,7 @@ final class ClientTest extends TestCase
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
-        $categories = array('Advertising & Marketing', 'Automotive');
+        $categories = array('Job Supplies');
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, true), true);
         $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
@@ -114,7 +114,7 @@ final class ClientTest extends TestCase
                 ->willReturn($file_data);
             $notes = 'Note updated';
             $parameters = array('notes' => $notes);
-            $document_id = 31727276;
+            $document_id = 125661908;
 
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
@@ -152,7 +152,7 @@ final class ClientTest extends TestCase
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
-        $categories = array('Advertising & Marketing', 'Automotive');
+        $categories = array('Job Supplies');
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, false), true);
         $id = $json_response['id'];
@@ -178,7 +178,7 @@ final class ClientTest extends TestCase
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
-        $url = 'https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg';
+        $url = 'https://raw.githubusercontent.com/veryfi/veryfi-python/master/tests/assets/receipt_public.jpg';
         $json_response = json_decode($veryfi_client->process_document_url($url, null, null, true, 1), true);
         $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
     }
