@@ -84,7 +84,7 @@ final class ClientTest extends TestCase
         $categories = array('Job Supplies');
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document($file, $categories, true), true);
-        $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
+        $this->assertEquals(strtolower('walgreens'), strtolower($json_response['vendor']['name']));
     }
 
     private function generate_random_string(): string
@@ -180,7 +180,7 @@ final class ClientTest extends TestCase
         }
         $url = 'https://raw.githubusercontent.com/veryfi/veryfi-python/master/tests/assets/receipt_public.jpg';
         $json_response = json_decode($veryfi_client->process_document_url($url, null, null, true, 1), true);
-        $this->assertEquals(strtolower('In-N-out Burger'), strtolower($json_response['vendor']['name']));
+        $this->assertEquals(strtolower('walgreens'), strtolower($json_response['vendor']['name']));
     }
 
     public function test_get_line_items(): void
