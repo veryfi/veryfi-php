@@ -8,10 +8,10 @@ use veryfi\AddLineItem;
 
 final class ClientTest extends TestCase
 {
-    private string $client_id = 'client_id';
-    private string $client_secret = 'client_secret';
-    private string $username = 'username';
-    private string $api_key = 'api_key';
+    private string $client_id = 'your_client_id';
+    private string $client_secret = 'your_client_secret';
+    private string $username = 'your_username';
+    private string $api_key = 'your_api_key';
     private string $receipt_path = __DIR__ . '/resources/receipt.jpg';
     private bool $mock_responses = true;
 
@@ -25,7 +25,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/getDocuments.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -48,7 +48,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/getDocument.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -73,7 +73,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ .'/resources/processDocument.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -108,7 +108,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/updateDocument.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -137,14 +137,14 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/deleteDocument.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
 
             $file_path = __DIR__ .'/resources/processDocument.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('process_document')
                 ->willReturn($file_data);
@@ -170,7 +170,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/processDocument.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -194,7 +194,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/getLineItems.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -217,7 +217,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/getLineItem.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -241,7 +241,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/updateLineItem.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -265,7 +265,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/addLineItem.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -298,7 +298,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/deleteLineItem.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -320,7 +320,7 @@ final class ClientTest extends TestCase
 
             $file_path = __DIR__ . '/resources/deleteLineItems.json';
             $file = fopen($file_path, 'r');
-            $file_data = utf8_encode(fread($file, filesize($file_path)));
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
                 ->method('exec_curl')
                 ->willReturn($file_data);
@@ -344,5 +344,119 @@ final class ClientTest extends TestCase
         $veryfi_client = new Client('', '', '', '');
         $json_response = json_decode($veryfi_client->get_documents(), true);
         $this->assertEquals('fail', $json_response['status']);
+    }
+
+    public function test_add_tag(): void
+    {
+        $document_id = 140512586;
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/addTag.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $json_response = json_decode($veryfi_client->add_tag($document_id, 'test_tag'), true);
+        $this->assertEqualsIgnoringCase('test_tag', $json_response['name']);
+        if (!$this->mock_responses) {
+            $json_response = json_decode($veryfi_client->delete_tags($document_id), true);
+            $this->assertEmpty($json_response);
+        }
+    }
+
+    public function test_delete_tags(): void
+    {
+        $document_id = 140512586;
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/deleteTags.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $json_response = json_decode($veryfi_client->delete_tags($document_id), true);
+        $this->assertEmpty($json_response);
+    }
+
+    public function test_get_tags(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/getTags.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $json_response = json_decode($veryfi_client->get_tags(), true);
+        $this->assertNotEmpty($json_response);
+    }
+
+    public function test_get_document_tags(): void
+    {
+        $document_id = 140804210;
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/getTags.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $json_response = json_decode($veryfi_client->get_document_tags($document_id), true);
+        $this->assertNotEmpty($json_response);
+    }
+
+    public function test_delete_tag(): void
+    {
+        $document_id = 140512586;
+        $tag_id = 6673689;
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/deleteTags.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $json_response = json_decode($veryfi_client->delete_tag($document_id, $tag_id), true);
+        $this->assertEmpty($json_response);
     }
 }

@@ -43,7 +43,7 @@ class Client
      */
     public string $base_url;
     /**
-     * Api version to use Veryfi by default 'v7'
+     * Api version to use Veryfi by default 'v8'
      *
      * @var string
      */
@@ -167,7 +167,8 @@ class Client
             $payload = "$payload,$key:$value";
         }
         $temporary_signature = hash_hmac('sha256', $payload, $this->client_secret, true);
-        return trim(utf8_decode(base64_encode($temporary_signature)));
+        $base64_signature = base64_encode($temporary_signature);
+        return trim(mb_convert_encoding($base64_signature, 'ISO-8859-1'));
     }
 
     /**
@@ -180,9 +181,13 @@ class Client
      */
     private function request(string $http_verb,
                              string $endpoint_name,
-                             array  $request_arguments): string
+                             array  $request_arguments,
+                             bool $force_v7 = false): string
     {
         $api_url = "$this->extend_url$endpoint_name";
+        if ($force_v7) {
+            $api_url = str_replace("v8","v7", $api_url);
+        }
         $time_stamp = (string) (time() * 1000);
         $signature = $this->generate_signature($request_arguments, $time_stamp);
         $this->headers['X-Veryfi-Request-Timestamp'] = $time_stamp;
@@ -443,7 +448,75 @@ class Client
         }
         $payload = "{{$payload}}";
         $temporary_signature = hash_hmac('SHA256', $payload, $client_secret, true);
-        $signature = trim(utf8_decode(base64_encode($temporary_signature)));
+        $signature = trim(mb_convert_encoding(base64_encode($temporary_signature), 'ISO-8859-1'));
         return $signature == $client_signature;
+    }
+
+    /**
+     * Add a new tag on an existing document
+     *
+     * @param int $document_id ID of the document you'd like to add a Tag
+     * @param string $tag line item object to add
+     * @return string Added tag data
+     */
+    public function add_tag(int $document_id,
+                            string $tag): string
+    {
+        $endpoint_name = "/documents/$document_id/tags/";
+        $request_arguments = array('name' => $tag);
+        return $this->request('PUT', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Unlink all tags assigned to a specific document.
+     *
+     * @param int $document_id ID of the document you'd like to delete their tags
+     * @return string A JSON response.
+     */
+    public function delete_tags(int $document_id): string
+    {
+        $endpoint_name = "/documents/$document_id/tags/";
+        $request_arguments = array();
+        return $this->request('DELETE', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Get list of tags.
+     *
+     * @return string A JSON with list of tags.
+     */
+    public function get_tags(): string
+    {
+        $endpoint_name = '/tags/';
+        $request_arguments = array();
+        return $this->request('GET', $endpoint_name, $request_arguments, true);
+    }
+
+    /**
+     * Retrieve list of tags by document ID.
+     *
+     * @param int $document_id ID of the document you'd like to retrieve tags.
+     * @return string A JSON with list of tags from the Document.
+     */
+    public function get_document_tags(int $document_id): string
+    {
+        $endpoint_name = "/documents/$document_id/tags/";
+        $request_arguments = array('id' => $document_id);
+        return $this->request('GET', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Unlink tag assigned to a specific document.
+     *
+     * @param int $document_id ID of the document you'd like to delete its tag
+     * @param int $tag_id ID of the tag you'd like to delete
+     * @return string A JSON response.
+     */
+    public function delete_tag(int $document_id,
+                               int $tag_id): string
+    {
+        $endpoint_name = "/documents/$document_id/tags/$tag_id/";
+        $request_arguments = array();
+        return $this->request('DELETE', $endpoint_name, $request_arguments);
     }
 }
