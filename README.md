@@ -41,7 +41,7 @@ use veryfi\Client;
 $client_id = 'your_client_id';
 $client_secret = 'your_client_secret';
 $username = 'your_username';
-$api_key = 'your_password';
+$api_key = 'your_api_key';
 
 $veryfi_client = new Client($client_id, $client_secret, $username, $api_key);
 $categories = array('Advertising & Marketing', 'Automotive');
