@@ -56,7 +56,7 @@ $json_response = json_decode($veryfi_client->process_document($file, $categories
 $client_id = 'your_client_id';
 $client_secret = 'your_client_secret';
 $username = 'your_username';
-$api_key = 'your_password';
+$api_key = 'your_api_key';
 
 $veryfi_client = new Client($client_id, $client_secret, $username, $api_key);
 $document_id = 'your_document_id' //as int
