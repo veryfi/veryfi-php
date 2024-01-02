@@ -129,7 +129,7 @@ class Client
     private function get_headers(): array
     {
         return array(
-            'User-Agent' => 'php veryfi-php/1.0.2',
+            'User-Agent' => 'php veryfi-php/1.0.3',
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Client-ID' => $this->client_id,
