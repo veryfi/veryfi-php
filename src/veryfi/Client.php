@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace veryfi;
 
 
+use CurlHandle;
+use Exception;
+
 /**
  * Veryfi-sdk for php
  *
@@ -18,7 +21,7 @@ class Client
      *
      * @var array static.
      */
-    const CATEGORIES = [
+    const array CATEGORIES = [
         'Advertising & Marketing',
         'Automotive',
         'Bank Charges & Fees',
@@ -99,7 +102,7 @@ class Client
      * @param string $username Username provided by Veryfi.
      * @param string $api_key Api key provided by Veryfi.
      * @param string $base_url Base url of Veryfi by default 'https://api.veryfi.com/api/',
-     * @param string $api_version Api version to use Veryfi, currently 'v8
+     * @param string $api_version Api version to use Veryfi, currently v8
      * @param int $api_timeout Api timeout for call Veryfi api, by default 120
      */
     public function __construct(string $client_id,
@@ -195,7 +198,7 @@ class Client
         $headers = array();
         foreach ($this->headers as $key => $value)
         {
-            array_push($headers, "$key:$value");
+            $headers[] = "$key:$value";
         }
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $api_url);
@@ -213,7 +216,7 @@ class Client
      * @param CurlHandle $curl Curl handle of request.
      * @return string A JSON response.
      */
-    protected function exec_curl($curl): string
+    protected function exec_curl(CurlHandle $curl): string
     {
         return curl_exec($curl);
     }
@@ -330,7 +333,7 @@ class Client
      *
      * @param int $document_id  ID of the document you'd like to update.
      * @param array $fields_to_update Fields to update.
-     * @return string A document json with updated fields, if fields are writable. Otherwise a document with unchanged fields.
+     * @return string A document json with updated fields, if fields are writable. Otherwise, a document with unchanged fields.
      */
     public function update_document(int $document_id,
                                     array $fields_to_update): string
@@ -388,7 +391,7 @@ class Client
      * @param int $document_id ID of the document you'd like to update
      * @param int $line_item_id ID of the line item you'd like to update
      * @param UpdateLineItem $payload line item object to update
-     * @return string Line item data with updated fields, if fields are writable. Otherwise line item data with unchanged fields.
+     * @return string Line item data with updated fields, if fields are writable. Otherwise, line item data with unchanged fields.
      */
     public function update_line_item(int $document_id,
                                      int $line_item_id,
@@ -550,4 +553,284 @@ class Client
         return $this->request('PUT', $endpoint_name, $request_arguments);
     }
 
+    /**
+     * Get all W2 documents.
+     *
+     * @param int|null $page The page number, response is capped to a maximum of 50 results per page.
+     * @return string An array of JSON with all W2 documents.
+     * @throws Exception when API version is not supported for W2 documents.
+     */
+    public function get_w2_documents(int $page = null): string
+    {
+        $endpoint_name = '/w2s/';
+        $params = [];
+        if ($page !== null) {
+            $params['page'] = $page;
+        }
+        return $this->request('GET', $endpoint_name, $params);
+    }
+
+    /**
+     * Process a W2 document from a file path and extract all fields from it.
+     *
+     * @param string $file_path Path on disk to a file to submit for data extraction.
+     * @param bool $delete_after_processing Delete this document from Veryfi after data has been extracted.
+     * @param int $max_pages_to_process The number of pages to process for the document.
+     * @param array $additional_request_parameters Additional request parameters.
+     * @return string Data extracted from the document.
+     */
+    public function process_w2_document(string $file_path,
+                                        bool $delete_after_processing = false,
+                                        int $max_pages_to_process = 1,
+                                        array $additional_request_parameters = array()): string
+    {
+        $endpoint_name = '/w2s/';
+        $file_name = pathinfo($file_path, PATHINFO_BASENAME);
+        $file = fopen($file_path, 'rb');
+        $file_data = base64_encode(fread($file, filesize($file_path)));
+        $request_arguments = array(
+            'file_name' => $file_name,
+            'file_data' => $file_data,
+            'auto_delete' => $delete_after_processing,
+            'max_pages_to_process' => $max_pages_to_process
+        );
+        $request_arguments = array_replace($request_arguments, $additional_request_parameters);
+        return $this->request('POST', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process a W2 document from a URL and extract all fields from it.
+     *
+     * @param string $file_name The file name including the extension
+     * @param string $file_url Publicly accessible URL to a file
+     * @param array|null $file_urls List of publicly accessible URLs to multiple files
+     * @param boolean $delete_after_processing Delete this document from Veryfi after data has been extracted
+     * @param int $max_pages_to_process The number of pages to process for the document
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document
+     */
+    public function process_w2_document_from_url(string $file_name, string $file_url, array $file_urls = null, bool $delete_after_processing = false, int $max_pages_to_process = 1, array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/w2s/";
+        $request_arguments = array_merge([
+            'file_name' => $file_name,
+            'auto_delete' => $delete_after_processing,
+            'file_url' => $file_url,
+            'file_urls' => $file_urls,
+            'max_pages_to_process' => $max_pages_to_process
+        ], $additional_request_parameters);
+
+        return $this->request("POST", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process any document and extract all the fields from it.
+     *
+     * @param string $file_path Path on disk to a file to submit for data extraction
+     * @param string $template_name The name of the extraction template
+     * @param int $max_pages_to_process The number of pages to process for the document
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document
+     */
+    public function process_any_document_from_file(string $file_path, string $template_name, int $max_pages_to_process = 20, array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/any-documents/";
+        $file_name = basename($file_path);
+        $base64_encoded_string = base64_encode(file_get_contents($file_path));
+        $request_arguments = array_merge([
+            'file_name' => $file_name,
+            'file_data' => $base64_encoded_string,
+            'template_name' => $template_name,
+            'max_pages_to_process' => $max_pages_to_process
+        ], $additional_request_parameters);
+
+        return $this->request("POST", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process any document from a file path and extract all fields from it.
+     *
+     * @param string $file_path Path on disk to a file to submit for data extraction.
+     * @param string $template_name The name of the extraction template.
+     * @param int $max_pages_to_process The number of pages to process for the document.
+     * @param array $additional_request_parameters Additional request parameters.
+     * @return string Data extracted from the document.
+     */
+    public function process_any_document(string $file_path,
+                                         string $template_name,
+                                         int $max_pages_to_process = 20,
+                                         array $additional_request_parameters = array()): string
+    {
+        $endpoint_name = '/any-documents/';
+        $file_name = pathinfo($file_path, PATHINFO_BASENAME);
+        $file = fopen($file_path, 'rb');
+        $file_data = base64_encode(fread($file, filesize($file_path)));
+        $request_arguments = array(
+            'file_name' => $file_name,
+            'file_data' => $file_data,
+            'template_name' => $template_name,
+            'max_pages_to_process' => $max_pages_to_process
+        );
+        $request_arguments = array_replace($request_arguments, $additional_request_parameters);
+        return $this->request('POST', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process any document from a URL and extract all fields from it.
+     *
+     * @param string $file_url Publicly accessible URL to a file
+     * @param string $template_name The name of the extraction template
+     * @param int $max_pages_to_process The number of pages to process for the document
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document
+     */
+    public function process_any_document_url(string $file_url, string $template_name, int $max_pages_to_process = 20, array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/any-documents/";
+        $request_arguments = array_merge([
+            'file_url' => $file_url,
+            'template_name' => $template_name,
+            'max_pages_to_process' => $max_pages_to_process
+        ], $additional_request_parameters);
+
+        return $this->request("POST", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Get all any documents.
+     *
+     * @param int $page The page number
+     * @param int $page_size The number of documents per page
+     * @return string Object of previously processed any documents
+     */
+    public function get_any_documents(int $page = 1, int $page_size = 50): string
+    {
+        $endpoint_name = "/any-documents/";
+        $request_arguments = ['page' => $page, 'page_size' => $page_size];
+        return $this->request("GET", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Get a specific any document.
+     *
+     * @param int $document_id The unique identifier of the document
+     * @return string Object of a previously processed document
+     */
+    public function get_any_document(int $document_id): string
+    {
+        $endpoint_name = "/any-documents/$document_id/";
+        return $this->request("GET", $endpoint_name, []);
+    }
+
+    /**
+     * Get a specific bank statement.
+     *
+     * @param int $document_id The unique identifier of the document
+     * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
+     * @param boolean $confidence_details Return the score and OCR score fields in the document response
+     * @return string Object of a previously processed bank statement
+     */
+    public function get_bank_statement(int $document_id, bool $bounding_boxes = false, bool $confidence_details = false): string
+    {
+        $endpoint_name = "/bank-statements/$document_id/";
+        $request_arguments = [
+            'bounding_boxes' => $bounding_boxes,
+            'confidence_details' => $confidence_details
+        ];
+        return $this->request("GET", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Get all bank statements.
+     *
+     * @param int $page The page number
+     * @param int $page_size The number of documents per page
+     * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
+     * @param boolean $confidence_details Return the score and OCR score fields in the document response
+     * @return string Object of previously processed bank statements
+     */
+    public function get_bank_statements(int $page = 1, int $page_size = 50, bool $bounding_boxes = false, bool $confidence_details = false): string
+    {
+        $endpoint_name = "/bank-statements/";
+        $request_arguments = [
+            'page' => $page,
+            'page_size' => $page_size,
+            'bounding_boxes' => $bounding_boxes,
+            'confidence_details' => $confidence_details
+        ];
+        return $this->request("GET", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process a bank statement from a file path and extract all fields from it.
+     *
+     * @param string $file_path Path on disk to a file to submit for data extraction.
+     * @param bool $bounding_boxes Return bounding box and bounding region for extracted fields.
+     * @param bool $confidence_details Return the score and OCR score fields in the document response.
+     * @param array $additional_request_parameters Additional request parameters.
+     * @return string Data extracted from the document.
+     */
+    public function process_bank_statement(string $file_path,
+                                           bool $bounding_boxes = false,
+                                           bool $confidence_details = false,
+                                           array $additional_request_parameters = array()): string
+    {
+        $endpoint_name = '/bank-statements/';
+        $file_name = pathinfo($file_path, PATHINFO_BASENAME);
+        $file = fopen($file_path, 'rb');
+        $file_data = base64_encode(fread($file, filesize($file_path)));
+        $request_arguments = array(
+            'file_name' => $file_name,
+            'file_data' => $file_data,
+            'bounding_boxes' => $bounding_boxes,
+            'confidence_details' => $confidence_details
+        );
+        $request_arguments = array_replace($request_arguments, $additional_request_parameters);
+        return $this->request('POST', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process a bank statement and extract all fields from it.
+     *
+     * @param string $file_path Path on disk to a file to submit for data extraction
+     * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
+     * @param boolean $confidence_details Return the score and OCR score fields in the document response
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document
+     */
+    public function process_bank_statement_from_file(string $file_path, bool $bounding_boxes = false, bool $confidence_details = false, array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/bank-statements/";
+        $file_name = basename($file_path);
+        $base64_encoded_string = base64_encode(file_get_contents($file_path));
+        $request_arguments = array_merge([
+            'file_name' => $file_name,
+            'file_data' => $base64_encoded_string,
+            'bounding_boxes' => $bounding_boxes,
+            'confidence_details' => $confidence_details
+        ], $additional_request_parameters);
+
+        return $this->request("POST", $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process a bank statement from a URL and extract all fields from it.
+     *
+     * @param string $file_url Publicly accessible URL to a file
+     * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
+     * @param boolean $confidence_details Return the score and OCR score fields in the document response
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document
+     */
+    public function process_bank_statement_url(string $file_url, bool $bounding_boxes = false, bool $confidence_details = false, array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/bank-statements/";
+        $request_arguments = array_merge([
+            'file_url' => $file_url,
+            'bounding_boxes' => $bounding_boxes,
+            'confidence_details' => $confidence_details
+        ], $additional_request_parameters);
+
+        return $this->request("POST", $endpoint_name, $request_arguments);
+    }
 }

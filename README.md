@@ -78,6 +78,11 @@ To learn more about Veryfi visit https://www.veryfi.com/
 
 ## Tutorial
 
+Debug project with https://xdebug.org/docs/install#pecl
+pecl install xdebug
+Installing '/opt/homebrew/Cellar/php/8.3.10/pecl/20230831/xdebug.so'
+install ok: channel://pecl.php.net/xdebug-3.3.2
+Extension xdebug enabled in php.ini
 
 Below is an introduction to the php SDK.
 

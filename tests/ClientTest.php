@@ -13,7 +13,19 @@ final class ClientTest extends TestCase
     private string $username = 'your_username';
     private string $api_key = 'your_api_key';
     private string $receipt_path = __DIR__ . '/resources/receipt.jpg';
-    private bool $mock_responses = true;
+    private string $w2_path = __DIR__ . '/resources/w2.png';
+    private string $any_doc_path = __DIR__ . '/resources/driver_license.png';
+    private string $bank_statement_path = __DIR__ . '/resources/bankstatement.pdf';
+    private bool $mock_responses = false;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->client_id = getenv('VERYFI_CLIENT_ID');
+        $this->client_secret = getenv('VERYFI_CLIENT_SECRET');
+        $this->username = getenv('VERYFI_USERNAME');
+        $this->api_key = getenv('VERYFI_API_KEY');
+    }
 
     public function test_get_documents(): void
     {
@@ -154,7 +166,7 @@ final class ClientTest extends TestCase
         }
         $categories = array('Job Supplies');
         $file = $this->receipt_path;
-        $json_response = json_decode($veryfi_client->process_document($file, $categories, false), true);
+        $json_response = json_decode($veryfi_client->process_document($file, $categories), true);
         $id = $json_response['id'];
         $delete_json_response = json_decode($veryfi_client->delete_document($id));
         $this->assertEquals(json_decode('{"status": "ok", "message": "Document has been deleted"}'), $delete_json_response);
@@ -229,6 +241,9 @@ final class ClientTest extends TestCase
         $this->assertEquals($line_item_id, $json_response['id']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_update_line_item(): void
     {
         $document_id = 44691518;
@@ -254,6 +269,9 @@ final class ClientTest extends TestCase
         $this->assertEquals('TEST', $json_response['description']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_add_line_item(): void
     {
         $document_id = 44691518;
@@ -504,5 +522,225 @@ final class ClientTest extends TestCase
         $tags = array('TAG_1', 'TAG_2', 'TAG_3');
         $json_response = json_decode($veryfi_client->add_tags($document_id, $tags), true);
         $this->assertNotEmpty($json_response);
+    }
+
+    public function test_process_w2_document(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ .'/resources/processW2Document.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $file = $this->w2_path;
+        $json_response = json_decode($veryfi_client->process_w2_document($file, true), true);
+        $this->assertNotEmpty( $json_response['id']);
+    }
+
+    public function test_process_any_document(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ .'/resources/processAnyDocument.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $file = $this->any_doc_path;
+        $json_response = json_decode($veryfi_client->process_any_document($file, 'us_driver_license'), true);
+        $this->assertNotEmpty( $json_response['id']);
+        $json_response = json_decode($veryfi_client->process_any_document_from_file($file, 'us_driver_license'), true);
+        $this->assertNotEmpty( $json_response['id']);
+    }
+
+    public function test_process_bank_statement(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ .'/resources/processBankStatement.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $file = $this->bank_statement_path;
+        $json_response = json_decode($veryfi_client->process_bank_statement($file), true);
+        $this->assertNotEmpty( $json_response['id']);
+        $json_response = json_decode($veryfi_client->process_bank_statement_from_file($file), true);
+        $this->assertNotEmpty( $json_response['id']);
+    }
+
+    public function test_process_any_document_url(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/processAnyDocumentUrl.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $url = 'https://cdn-dev.veryfi.com/testing/veryfi-python/driver_license.png';
+        $json_response = json_decode($veryfi_client->process_any_document_url($url, 'us_driver_license'), true);
+        $this->assertNotEmpty( $json_response['id']);
+    }
+
+    public function test_process_bank_statement_url(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/processBankStatementUrl.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $url = 'https://cdn-dev.veryfi.com/testing/veryfi-python/bankstatement.pdf';
+        $json_response = json_decode($veryfi_client->process_bank_statement_url($url), true);
+        $this->assertNotEmpty( $json_response['id']);
+    }
+
+    public function test_process_w2_document_from_url(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+            $file_path = __DIR__ . '/resources/processW2DocumentFromUrl.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $file_name = 'w2_form.pdf';
+        $url = 'https://cdn.veryfi.com/wp-content/uploads/image.png';
+        $json_response = json_decode($veryfi_client->process_w2_document_from_url($file_name, $url, null, true), true);
+        $this->assertNotEmpty( $json_response['id']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_get_w2_documents(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+            $file_path = __DIR__ . '/resources/getW2Documents.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $json_response = json_decode($veryfi_client->get_w2_documents(), true);
+        $json_len = sizeof($json_response);
+        $this->assertTrue($json_len > 1);
+    }
+
+    public function test_get_bank_statements(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/getBankStatements.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $json_response = json_decode($veryfi_client->get_bank_statements(), true);
+        $json_len = sizeof($json_response);
+        $this->assertTrue($json_len > 1);
+    }
+
+    public function test_get_any_documents(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/getAnyDocuments.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $json_response = json_decode($veryfi_client->get_any_documents(), true);
+        $json_len = sizeof($json_response);
+        $this->assertTrue($json_len > 1);
     }
 }
