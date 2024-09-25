@@ -3,8 +3,6 @@
 declare(strict_types=1);
 namespace veryfi;
 
-
-use CurlHandle;
 use Exception;
 
 /**
@@ -21,7 +19,7 @@ class Client
      *
      * @var array static.
      */
-    const array CATEGORIES = [
+    const  CATEGORIES = [
         'Advertising & Marketing',
         'Automotive',
         'Bank Charges & Fees',
@@ -132,7 +130,7 @@ class Client
     private function get_headers(): array
     {
         return array(
-            'User-Agent' => 'php veryfi-php/1.0.3',
+            'User-Agent' => 'php veryfi-php/1.0.4',
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Client-ID' => $this->client_id,
@@ -213,10 +211,10 @@ class Client
     /**\internal
      * Exec the curl, needed for mock it.
      *
-     * @param CurlHandle $curl Curl handle of request.
+     * @param $curl Curl handle of request.
      * @return string A JSON response.
      */
-    protected function exec_curl(CurlHandle $curl): string
+    protected function exec_curl($curl): string
     {
         return curl_exec($curl);
     }
@@ -568,6 +566,19 @@ class Client
             $params['page'] = $page;
         }
         return $this->request('GET', $endpoint_name, $params);
+    }
+
+    /**
+     * Get a W2 document.
+     *
+     * @param string $document_id The ID of the document you'd like to retrieve.
+     * @return string Data extracted from the document.
+     */
+    public function get_w2_document(string $document_id): string
+    {
+        $endpoint_name = "/w2s/{$document_id}/";
+        $request_arguments = ['id' => $document_id];
+        return $this->request('GET', $endpoint_name, $request_arguments);
     }
 
     /**

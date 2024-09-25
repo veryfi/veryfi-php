@@ -16,7 +16,7 @@ final class ClientTest extends TestCase
     private string $w2_path = __DIR__ . '/resources/w2.png';
     private string $any_doc_path = __DIR__ . '/resources/driver_license.png';
     private string $bank_statement_path = __DIR__ . '/resources/bankstatement.pdf';
-    private bool $mock_responses = false;
+    private bool $mock_responses = true;
 
     protected function setUp(): void
     {
@@ -558,7 +558,7 @@ final class ClientTest extends TestCase
             $file_path = __DIR__ .'/resources/processAnyDocument.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
-            $veryfi_client->expects($this->once())
+            $veryfi_client->expects($this->atLeastOnce())
                 ->method('exec_curl')
                 ->willReturn($file_data);
 
@@ -584,7 +584,7 @@ final class ClientTest extends TestCase
             $file_path = __DIR__ .'/resources/processBankStatement.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
-            $veryfi_client->expects($this->once())
+            $veryfi_client->expects($this->atLeastOnce())
                 ->method('exec_curl')
                 ->willReturn($file_data);
 
@@ -607,7 +607,7 @@ final class ClientTest extends TestCase
                 ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
                 ->getMock();
 
-            $file_path = __DIR__ . '/resources/processAnyDocumentUrl.json';
+            $file_path = __DIR__ . '/resources/processAnyDocument.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
@@ -631,7 +631,7 @@ final class ClientTest extends TestCase
                 ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
                 ->getMock();
 
-            $file_path = __DIR__ . '/resources/processBankStatementUrl.json';
+            $file_path = __DIR__ . '/resources/processBankStatement.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
@@ -654,7 +654,7 @@ final class ClientTest extends TestCase
                 ->onlyMethods(['exec_curl'])
                 ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
                 ->getMock();
-            $file_path = __DIR__ . '/resources/processW2DocumentFromUrl.json';
+            $file_path = __DIR__ . '/resources/processW2Document.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
             $veryfi_client->expects($this->once())
@@ -684,7 +684,7 @@ final class ClientTest extends TestCase
             $file_path = __DIR__ . '/resources/getW2Documents.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
-            $veryfi_client->expects($this->once())
+            $veryfi_client->expects($this->atLeastOnce())
                 ->method('exec_curl')
                 ->willReturn($file_data);
 
@@ -694,6 +694,9 @@ final class ClientTest extends TestCase
         $json_response = json_decode($veryfi_client->get_w2_documents(), true);
         $json_len = sizeof($json_response);
         $this->assertTrue($json_len > 1);
+        $document_id = $json_response['results'][0]['id'];
+        $json_response = json_decode($veryfi_client->get_w2_document($document_id), true);
+        $this->assertNotEmpty( $json_response);
     }
 
     public function test_get_bank_statements(): void
@@ -707,7 +710,7 @@ final class ClientTest extends TestCase
             $file_path = __DIR__ . '/resources/getBankStatements.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
-            $veryfi_client->expects($this->once())
+            $veryfi_client->expects($this->atLeastOnce())
                 ->method('exec_curl')
                 ->willReturn($file_data);
 
@@ -718,6 +721,9 @@ final class ClientTest extends TestCase
         $json_response = json_decode($veryfi_client->get_bank_statements(), true);
         $json_len = sizeof($json_response);
         $this->assertTrue($json_len > 1);
+        $document_id = $json_response['results'][0]['id'];
+        $json_response = json_decode($veryfi_client->get_bank_statement($document_id), true);
+        $this->assertNotEmpty( $json_response);
     }
 
     public function test_get_any_documents(): void
@@ -731,7 +737,7 @@ final class ClientTest extends TestCase
             $file_path = __DIR__ . '/resources/getAnyDocuments.json';
             $file = fopen($file_path, 'r');
             $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
-            $veryfi_client->expects($this->once())
+            $veryfi_client->expects($this->atLeastOnce())
                 ->method('exec_curl')
                 ->willReturn($file_data);
 
@@ -742,5 +748,8 @@ final class ClientTest extends TestCase
         $json_response = json_decode($veryfi_client->get_any_documents(), true);
         $json_len = sizeof($json_response);
         $this->assertTrue($json_len > 1);
+        $document_id = $json_response['results'][0]['id'];
+        $json_response = json_decode($veryfi_client->get_any_document($document_id), true);
+        $this->assertNotEmpty( $json_response);
     }
 }
