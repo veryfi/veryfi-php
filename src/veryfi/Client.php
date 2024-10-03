@@ -9,6 +9,7 @@ use Exception;
  * Veryfi-sdk for php
  *
  * @author Sebastian Carmona Tobon
+ * @author Alejandro Uribe Sánchez
  * @license MIT
  */
 class Client
@@ -220,7 +221,7 @@ class Client
     }
 
     /**
-     * Get list of documents.
+     * Get list of documents. https://docs.veryfi.com/api/receipts-invoices/search-documents/
      *
      * @return string A JSON with list of processes documents and metadata.
      */
@@ -232,7 +233,7 @@ class Client
     }
 
     /**
-     * Retrieve document by ID.
+     * Retrieve document by ID. https://docs.veryfi.com/api/receipts-invoices/get-a-document/
      *
      * @param int $document_id ID of the document you'd like to retrieve.
      * @return string A Json of data extracted from the Document.
@@ -245,17 +246,17 @@ class Client
     }
 
     /**
-     * Process a document and extract all the fields from it.
+     * Process a document and extract all the fields from it. https://docs.veryfi.com/api/receipts-invoices/process-a-document/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction.
      * @param array|string[] $categories Array of categories Veryfi can use to categorize the document.
-     * @param bool $delete_after_processing Delete this document from Veryfi after data has been extracted.
+     * @param bool $auto_delete Delete this document from Veryfi after data has been extracted.
      * @param array $additional_request_parameters Additional request parameters.
      * @return string Data extracted from the document.
      */
     public function process_document(string $file_path,
                                      array $categories = self::CATEGORIES,
-                                     bool $delete_after_processing = false,
+                                     bool $auto_delete = false,
                                      array $additional_request_parameters = array()): string
     {
         $endpoint_name = '/documents/';
@@ -266,19 +267,19 @@ class Client
             'file_name' => $file_name,
             'file_data' => $file_data,
             'categories' => $categories,
-            'auto_delete' => $delete_after_processing
+            'auto_delete' => $auto_delete
         );
         $request_arguments = array_replace($request_arguments, $additional_request_parameters);
         return $this->request('POST', $endpoint_name, $request_arguments);
     }
 
     /**
-     * Process Document from url and extract all the fields from it.
+     * Process Document from url and extract all the fields from it. https://docs.veryfi.com/api/receipts-invoices/process-a-document/
      *
      * @param string|null $file_url Required if file_urls isn't specified. Publicly accessible URL to a file, e.g. "https://cdn.example.com/receipt.jpg".
      * @param array|null $file_urls Required if file_url isn't specifies. List of publicly accessible URLs to multiple files, e.g. ['https://cdn.example.com/receipt1.jpg', 'https://cdn.example.com/receipt2.jpg']
      * @param array|null $categories Array of categories to use when categorizing the document
-     * @param bool $delete_after_processing Delete this/these document(s) from Veryfi after data has been extracted
+     * @param bool $auto_delete Delete this/these document(s) from Veryfi after data has been extracted
      * @param int $boost_mode Flag that tells Veryfi whether boost mode should be enabled. When set to 1, Veryfi will skip data enrichment steps, but will process the document faster. Default value for this flag is 0.
      * @param string|null $external_id Optional custom document identifier. Use this if you would like to assign your own ID to documents.
      * @param int|null $max_pages_to_process When sending a long document to Veryfi for processing, this parameter controls how many pages of the document will be read and processed, starting from page 1.
@@ -288,7 +289,7 @@ class Client
     public function process_document_url(string $file_url = null,
                                          array $file_urls = null,
                                          array $categories = null,
-                                         bool $delete_after_processing = false,
+                                         bool $auto_delete = false,
                                          int $boost_mode = 0,
                                          string $external_id = null,
                                          int $max_pages_to_process = null,
@@ -296,7 +297,7 @@ class Client
     {
         $endpoint_name = '/documents/';
         $request_arguments = array(
-            'auto_delete' => $delete_after_processing,
+            'auto_delete' => $auto_delete,
             'boost_mode' => $boost_mode,
             'categories' => $categories,
             'external_id' => $external_id,
@@ -309,7 +310,7 @@ class Client
     }
 
     /**
-     * Delete Document from Veryfi.
+     * Delete Document from Veryfi. https://docs.veryfi.com/api/receipts-invoices/delete-a-document/
      *
      * @param int $document_id ID of the document you'd like to delete.
      * @return string A JSON response.
@@ -323,7 +324,7 @@ class Client
 
     /**
      * Update data for a previously processed document, including almost any field like `vendor`, `date`, `notes` and etc.
-     *
+     * https://docs.veryfi.com/api/receipts-invoices/update-a-document/
      * <code>
      * $parameters = array('notes' => 'see me');
      * veryfi_client->update_document(id, $parameters);
@@ -341,7 +342,7 @@ class Client
     }
 
     /**
-     * Retrieve all line items for a document.
+     * Retrieve all line items for a document. https://docs.veryfi.com/api/receipts-invoices/get-document-line-items/
      *
      * @param int $document_id ID of the document you'd like to retrieve
      * @return string List of line items extracted from the document as string
@@ -354,7 +355,7 @@ class Client
     }
 
     /**
-     * Retrieve a line item for existing document by ID.
+     * Retrieve a line item for existing document by ID. https://docs.veryfi.com/api/receipts-invoices/get-a-line-item/
      *
      * @param int $document_id ID of the document you'd like to retrieve
      * @param int $line_item_id ID of the line item you'd like to retrieve
@@ -369,7 +370,7 @@ class Client
     }
 
     /**
-     * Add a new line item on an existing document
+     * Add a new line item on an existing document. https://docs.veryfi.com/api/receipts-invoices/create-a-line-item/
      *
      * @param int $document_id ID of the document you'd like to update
      * @param AddLineItem $payload line item object to add
@@ -384,7 +385,7 @@ class Client
     }
 
     /**
-     * Update an existing line item on an existing document.
+     * Update an existing line item on an existing document. https://docs.veryfi.com/api/receipts-invoices/update-a-line-item/
      *
      * @param int $document_id ID of the document you'd like to update
      * @param int $line_item_id ID of the line item you'd like to update
@@ -401,7 +402,7 @@ class Client
     }
 
     /**
-     * Delete all line items on an existing document.
+     * Delete all line items on an existing document. https://docs.veryfi.com/api/receipts-invoices/delete-all-document-line-items/
      *
      * @param int $document_id  ID of the document you'd like to delete
      * @return string A JSON response.
@@ -414,7 +415,7 @@ class Client
     }
 
     /**
-     * Delete an existing line item on an existing document.
+     * Delete an existing line item on an existing document. https://docs.veryfi.com/api/receipts-invoices/delete-a-line-item/
      *
      * @param int $document_id ID of the document you'd like to delete
      * @param int $line_item_id ID of the line item you'd like to delete
@@ -454,7 +455,7 @@ class Client
     }
 
     /**
-     * Add a new tag on an existing document
+     * Add a new tag on an existing document. https://docs.veryfi.com/api/receipts-invoices/add-a-tag-to-a-document/
      *
      * @param int $document_id ID of the document you'd like to add a Tag
      * @param string $tag line item object to add
@@ -469,7 +470,7 @@ class Client
     }
 
     /**
-     * Unlink all tags assigned to a specific document.
+     * Unlink all tags assigned to a specific document. https://docs.veryfi.com/api/receipts-invoices/unlink-all-tags-from-a-document/
      *
      * @param int $document_id ID of the document you'd like to delete their tags
      * @return string A JSON response.
@@ -494,7 +495,7 @@ class Client
     }
 
     /**
-     * Retrieve list of tags by document ID.
+     * Retrieve list of tags by document ID. https://docs.veryfi.com/api/receipts-invoices/get-document-tags/
      *
      * @param int $document_id ID of the document you'd like to retrieve tags.
      * @return string A JSON with list of tags from the Document.
@@ -507,7 +508,7 @@ class Client
     }
 
     /**
-     * Unlink tag assigned to a specific document.
+     * Unlink tag assigned to a specific document. https://docs.veryfi.com/api/receipts-invoices/unlink-a-tag-from-a-document/
      *
      * @param int $document_id ID of the document you'd like to delete its tag
      * @param int $tag_id ID of the tag you'd like to delete
@@ -522,7 +523,7 @@ class Client
     }
 
     /**
-     * Add multiple tags on an existing document
+     * Add multiple tags on an existing document. https://docs.veryfi.com/api/receipts-invoices/add-tags-to-a-document/
      *
      * @param int $document_id ID of the document you'd like to add a Tag
      * @param array $tags array of strings
@@ -552,46 +553,61 @@ class Client
     }
 
     /**
-     * Get all W2 documents.
+     * Get all W2 documents. https://docs.veryfi.com/api/w2s/get-w-2-s/
      *
      * @param int|null $page The page number, response is capped to a maximum of 50 results per page.
+     * @param array $additional_request_parameters Additional request parameters
      * @return string An array of JSON with all W2 documents.
      * @throws Exception when API version is not supported for W2 documents.
      */
-    public function get_w2_documents(int $page = null): string
+    public function get_w2_documents(int $page = null,  array $additional_request_parameters = []): string
     {
         $endpoint_name = '/w2s/';
-        $params = [];
-        if ($page !== null) {
-            $params['page'] = $page;
-        }
-        return $this->request('GET', $endpoint_name, $params);
-    }
-
-    /**
-     * Get a W2 document.
-     *
-     * @param string $document_id The ID of the document you'd like to retrieve.
-     * @return string Data extracted from the document.
-     */
-    public function get_w2_document(string $document_id): string
-    {
-        $endpoint_name = "/w2s/{$document_id}/";
-        $request_arguments = ['id' => $document_id];
+        $request_arguments = array_merge([
+            'page' => $page,
+        ], $additional_request_parameters);
         return $this->request('GET', $endpoint_name, $request_arguments);
     }
 
     /**
-     * Process a W2 document from a file path and extract all fields from it.
+     * Get a W2 document. https://docs.veryfi.com/api/w2s/get-a-w-2/
+     *
+     * @param string $document_id The ID of the document you'd like to retrieve.
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document.
+     */
+    public function get_w2_document(string $document_id,  array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/w2s/{$document_id}/";
+        $request_arguments = array_merge(['id' => $document_id], $additional_request_parameters);
+        return $this->request('GET', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * DELETE a W2 document. https://docs.veryfi.com/api/w2s/delete-a-w-2/
+     *
+     * @param string $document_id The ID of the document you'd like to retrieve.
+     * @param array $additional_request_parameters Additional request parameters
+     * @return string Data extracted from the document.
+     */
+    public function delete_w2_document(string $document_id,  array $additional_request_parameters = []): string
+    {
+        $endpoint_name = "/w2s/{$document_id}/";
+        $request_arguments = array_merge(['id' => $document_id], $additional_request_parameters);
+        return $this->request('DELETE', $endpoint_name, $request_arguments);
+    }
+
+    /**
+     * Process a W2 document from a file path and extract all fields from it. https://docs.veryfi.com/api/w2s/process-a-w-2/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction.
-     * @param bool $delete_after_processing Delete this document from Veryfi after data has been extracted.
+     * @param bool $auto_delete Delete this document from Veryfi after data has been extracted.
      * @param int $max_pages_to_process The number of pages to process for the document.
      * @param array $additional_request_parameters Additional request parameters.
      * @return string Data extracted from the document.
      */
     public function process_w2_document(string $file_path,
-                                        bool $delete_after_processing = false,
+                                        bool $auto_delete = false,
                                         int $max_pages_to_process = 1,
                                         array $additional_request_parameters = array()): string
     {
@@ -602,7 +618,7 @@ class Client
         $request_arguments = array(
             'file_name' => $file_name,
             'file_data' => $file_data,
-            'auto_delete' => $delete_after_processing,
+            'auto_delete' => $auto_delete,
             'max_pages_to_process' => $max_pages_to_process
         );
         $request_arguments = array_replace($request_arguments, $additional_request_parameters);
@@ -610,22 +626,22 @@ class Client
     }
 
     /**
-     * Process a W2 document from a URL and extract all fields from it.
+     * Process a W2 document from a URL and extract all fields from it. https://docs.veryfi.com/api/w2s/process-a-w-2/
      *
      * @param string $file_name The file name including the extension
      * @param string $file_url Publicly accessible URL to a file
      * @param array|null $file_urls List of publicly accessible URLs to multiple files
-     * @param boolean $delete_after_processing Delete this document from Veryfi after data has been extracted
+     * @param boolean $auto_delete Delete this document from Veryfi after data has been extracted
      * @param int $max_pages_to_process The number of pages to process for the document
      * @param array $additional_request_parameters Additional request parameters
      * @return string Data extracted from the document
      */
-    public function process_w2_document_from_url(string $file_name, string $file_url, array $file_urls = null, bool $delete_after_processing = false, int $max_pages_to_process = 1, array $additional_request_parameters = []): string
+    public function process_w2_document_from_url(string $file_name, string $file_url, array $file_urls = null, bool $auto_delete = false, int $max_pages_to_process = 1, array $additional_request_parameters = []): string
     {
         $endpoint_name = "/w2s/";
         $request_arguments = array_merge([
             'file_name' => $file_name,
-            'auto_delete' => $delete_after_processing,
+            'auto_delete' => $auto_delete,
             'file_url' => $file_url,
             'file_urls' => $file_urls,
             'max_pages_to_process' => $max_pages_to_process
@@ -635,7 +651,7 @@ class Client
     }
 
     /**
-     * Process any document and extract all the fields from it.
+     * Process any document and extract all the fields from it. https://docs.veryfi.com/api/anydocs/process-%E2%88%80-doc/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction
      * @param string $template_name The name of the extraction template
@@ -659,7 +675,7 @@ class Client
     }
 
     /**
-     * Process any document from a file path and extract all fields from it.
+     * Process any document from a file path and extract all fields from it. https://docs.veryfi.com/api/anydocs/process-%E2%88%80-doc/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction.
      * @param string $template_name The name of the extraction template.
@@ -687,7 +703,7 @@ class Client
     }
 
     /**
-     * Process any document from a URL and extract all fields from it.
+     * Process any document from a URL and extract all fields from it. https://docs.veryfi.com/api/anydocs/process-%E2%88%80-doc/
      *
      * @param string $file_url Publicly accessible URL to a file
      * @param string $template_name The name of the extraction template
@@ -708,72 +724,76 @@ class Client
     }
 
     /**
-     * Get all any documents.
+     * Get all any documents. https://docs.veryfi.com/api/anydocs/get-%E2%88%80-docs/
      *
      * @param int $page The page number
      * @param int $page_size The number of documents per page
+     * @param array $additional_request_parameters Additional request parameters
      * @return string Object of previously processed any documents
      */
-    public function get_any_documents(int $page = 1, int $page_size = 50): string
+    public function get_any_documents(int $page = 1, int $page_size = 50, array $additional_request_parameters = []): string
     {
         $endpoint_name = "/any-documents/";
-        $request_arguments = ['page' => $page, 'page_size' => $page_size];
+        $request_arguments = array_merge(['page' => $page, 'page_size' => $page_size], $additional_request_parameters);
         return $this->request("GET", $endpoint_name, $request_arguments);
     }
 
     /**
-     * Get a specific any document.
+     * Get a specific any document. https://docs.veryfi.com/api/anydocs/get-a-%E2%88%80-doc/
      *
      * @param int $document_id The unique identifier of the document
+     * @param array $additional_request_parameters Additional request parameters
      * @return string Object of a previously processed document
      */
-    public function get_any_document(int $document_id): string
+    public function get_any_document(int $document_id, array $additional_request_parameters = array()): string
     {
         $endpoint_name = "/any-documents/$document_id/";
-        return $this->request("GET", $endpoint_name, []);
+        return $this->request("GET", $endpoint_name, $additional_request_parameters);
     }
 
     /**
-     * Get a specific bank statement.
+     * Get a specific bank statement. https://docs.veryfi.com/api/bank-statements/get-a-bank-statement/
      *
      * @param int $document_id The unique identifier of the document
      * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
      * @param boolean $confidence_details Return the score and OCR score fields in the document response
+     * @param array $additional_request_parameters Additional request parameters
      * @return string Object of a previously processed bank statement
      */
-    public function get_bank_statement(int $document_id, bool $bounding_boxes = false, bool $confidence_details = false): string
+    public function get_bank_statement(int $document_id, bool $bounding_boxes = false, bool $confidence_details = false, array $additional_request_parameters = array()): string
     {
         $endpoint_name = "/bank-statements/$document_id/";
-        $request_arguments = [
+        $request_arguments = array_merge([
             'bounding_boxes' => $bounding_boxes,
             'confidence_details' => $confidence_details
-        ];
+        ], $additional_request_parameters);
         return $this->request("GET", $endpoint_name, $request_arguments);
     }
 
     /**
-     * Get all bank statements.
+     * Get all bank statements. https://docs.veryfi.com/api/bank-statements/get-bank-statements/
      *
      * @param int $page The page number
      * @param int $page_size The number of documents per page
      * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
      * @param boolean $confidence_details Return the score and OCR score fields in the document response
+     * @param array $additional_request_parameters Additional request parameters
      * @return string Object of previously processed bank statements
      */
-    public function get_bank_statements(int $page = 1, int $page_size = 50, bool $bounding_boxes = false, bool $confidence_details = false): string
+    public function get_bank_statements(int $page = 1, int $page_size = 50, bool $bounding_boxes = false, bool $confidence_details = false, array $additional_request_parameters = array()): string
     {
         $endpoint_name = "/bank-statements/";
-        $request_arguments = [
+        $request_arguments = array_merge([
             'page' => $page,
             'page_size' => $page_size,
             'bounding_boxes' => $bounding_boxes,
             'confidence_details' => $confidence_details
-        ];
+        ], $additional_request_parameters);
         return $this->request("GET", $endpoint_name, $request_arguments);
     }
 
     /**
-     * Process a bank statement from a file path and extract all fields from it.
+     * Process a bank statement from a file path and extract all fields from it. https://docs.veryfi.com/api/bank-statements/process-a-bank-statement/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction.
      * @param bool $bounding_boxes Return bounding box and bounding region for extracted fields.
@@ -801,7 +821,7 @@ class Client
     }
 
     /**
-     * Process a bank statement and extract all fields from it.
+     * Process a bank statement and extract all fields from it. https://docs.veryfi.com/api/bank-statements/process-a-bank-statement/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction
      * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
@@ -825,7 +845,7 @@ class Client
     }
 
     /**
-     * Process a bank statement from a URL and extract all fields from it.
+     * Process a bank statement from a URL and extract all fields from it. https://docs.veryfi.com/api/bank-statements/process-a-bank-statement/
      *
      * @param string $file_url Publicly accessible URL to a file
      * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
