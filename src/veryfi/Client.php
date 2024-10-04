@@ -651,30 +651,6 @@ class Client
     }
 
     /**
-     * Process any document and extract all the fields from it. https://docs.veryfi.com/api/anydocs/process-%E2%88%80-doc/
-     *
-     * @param string $file_path Path on disk to a file to submit for data extraction
-     * @param string $template_name The name of the extraction template
-     * @param int $max_pages_to_process The number of pages to process for the document
-     * @param array $additional_request_parameters Additional request parameters
-     * @return string Data extracted from the document
-     */
-    public function process_any_document_from_file(string $file_path, string $template_name, int $max_pages_to_process = 20, array $additional_request_parameters = []): string
-    {
-        $endpoint_name = "/any-documents/";
-        $file_name = basename($file_path);
-        $base64_encoded_string = base64_encode(file_get_contents($file_path));
-        $request_arguments = array_merge([
-            'file_name' => $file_name,
-            'file_data' => $base64_encoded_string,
-            'template_name' => $template_name,
-            'max_pages_to_process' => $max_pages_to_process
-        ], $additional_request_parameters);
-
-        return $this->request("POST", $endpoint_name, $request_arguments);
-    }
-
-    /**
      * Process any document from a file path and extract all fields from it. https://docs.veryfi.com/api/anydocs/process-%E2%88%80-doc/
      *
      * @param string $file_path Path on disk to a file to submit for data extraction.
@@ -818,30 +794,6 @@ class Client
         );
         $request_arguments = array_replace($request_arguments, $additional_request_parameters);
         return $this->request('POST', $endpoint_name, $request_arguments);
-    }
-
-    /**
-     * Process a bank statement and extract all fields from it. https://docs.veryfi.com/api/bank-statements/process-a-bank-statement/
-     *
-     * @param string $file_path Path on disk to a file to submit for data extraction
-     * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
-     * @param boolean $confidence_details Return the score and OCR score fields in the document response
-     * @param array $additional_request_parameters Additional request parameters
-     * @return string Data extracted from the document
-     */
-    public function process_bank_statement_from_file(string $file_path, bool $bounding_boxes = false, bool $confidence_details = false, array $additional_request_parameters = []): string
-    {
-        $endpoint_name = "/bank-statements/";
-        $file_name = basename($file_path);
-        $base64_encoded_string = base64_encode(file_get_contents($file_path));
-        $request_arguments = array_merge([
-            'file_name' => $file_name,
-            'file_data' => $base64_encoded_string,
-            'bounding_boxes' => $bounding_boxes,
-            'confidence_details' => $confidence_details
-        ], $additional_request_parameters);
-
-        return $this->request("POST", $endpoint_name, $request_arguments);
     }
 
     /**

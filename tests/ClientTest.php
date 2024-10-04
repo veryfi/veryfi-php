@@ -569,8 +569,6 @@ final class ClientTest extends TestCase
         $file = $this->any_doc_path;
         $json_response = json_decode($veryfi_client->process_any_document($file, 'us_driver_license'), true);
         $this->assertNotEmpty( $json_response['id']);
-        $json_response = json_decode($veryfi_client->process_any_document_from_file($file, 'us_driver_license'), true);
-        $this->assertNotEmpty( $json_response['id']);
     }
 
     public function test_process_bank_statement(): void
@@ -594,8 +592,6 @@ final class ClientTest extends TestCase
 
         $file = $this->bank_statement_path;
         $json_response = json_decode($veryfi_client->process_bank_statement($file), true);
-        $this->assertNotEmpty( $json_response['id']);
-        $json_response = json_decode($veryfi_client->process_bank_statement_from_file($file), true);
         $this->assertNotEmpty( $json_response['id']);
     }
 
