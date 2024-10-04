@@ -263,9 +263,11 @@ class Client
         $file_name = pathinfo($file_path, PATHINFO_BASENAME);
         $file = fopen($file_path, 'rb');
         $file_data = base64_encode(fread($file, filesize($file_path)));
+        $file_type = mime_content_type($file_path);
+        $base64_with_hint = "data:$file_type;base64," . $file_data;
         $request_arguments = array(
             'file_name' => $file_name,
-            'file_data' => $file_data,
+            'file_data' => $base64_with_hint,
             'categories' => $categories,
             'auto_delete' => $auto_delete
         );
@@ -615,9 +617,11 @@ class Client
         $file_name = pathinfo($file_path, PATHINFO_BASENAME);
         $file = fopen($file_path, 'rb');
         $file_data = base64_encode(fread($file, filesize($file_path)));
+        $file_type = mime_content_type($file_path);
+        $base64_with_hint = "data:$file_type;base64," . $file_data;
         $request_arguments = array(
             'file_name' => $file_name,
-            'file_data' => $file_data,
+            'file_data' => $base64_with_hint,
             'auto_delete' => $auto_delete,
             'max_pages_to_process' => $max_pages_to_process
         );
@@ -668,9 +672,11 @@ class Client
         $file_name = pathinfo($file_path, PATHINFO_BASENAME);
         $file = fopen($file_path, 'rb');
         $file_data = base64_encode(fread($file, filesize($file_path)));
+        $file_type = mime_content_type($file_path);
+        $base64_with_hint = "data:$file_type;base64," . $file_data;
         $request_arguments = array(
             'file_name' => $file_name,
-            'file_data' => $file_data,
+            'file_data' => $base64_with_hint,
             'template_name' => $template_name,
             'max_pages_to_process' => $max_pages_to_process
         );
@@ -786,9 +792,11 @@ class Client
         $file_name = pathinfo($file_path, PATHINFO_BASENAME);
         $file = fopen($file_path, 'rb');
         $file_data = base64_encode(fread($file, filesize($file_path)));
+        $file_type = mime_content_type($file_path);
+        $base64_with_hint = "data:$file_type;base64," . $file_data;
         $request_arguments = array(
             'file_name' => $file_name,
-            'file_data' => $file_data,
+            'file_data' => $base64_with_hint,
             'bounding_boxes' => $bounding_boxes,
             'confidence_details' => $confidence_details
         );

@@ -20,7 +20,8 @@
     "php": ">=7.4",
     "ext-curl": "*",
     "ext-json": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-fileinfo": "*"
   },
 
   "require-dev": {
