@@ -1,9 +1,9 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use veryfi\Client;
-use veryfi\UpdateLineItem;
-use veryfi\AddLineItem;
+use veryfi\client;
+use veryfi\LineItemUpdate;
+use veryfi\LineItem;
 
 
 final class ClientTest extends TestCase
@@ -264,7 +264,7 @@ final class ClientTest extends TestCase
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
         $fields_to_update = array('description' => 'TEST');
-        $fields_to_update = new UpdateLineItem($fields_to_update);
+        $fields_to_update = new LineItemUpdate($fields_to_update);
         $json_response = json_decode($veryfi_client->update_line_item($document_id, $line_item_id, $fields_to_update), true);
         $this->assertEquals('TEST', $json_response['description']);
     }
@@ -291,7 +291,7 @@ final class ClientTest extends TestCase
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
         $line_item = array('order' => 20, 'description' => 'TEST', 'total' => 20.1, 'sku' => 'aqw');
-        $line_item = new AddLineItem($line_item);
+        $line_item = new LineItem($line_item);
         $json_response = json_decode($veryfi_client->add_line_item($document_id, $line_item), true);
         $this->assertEquals($line_item->order, $json_response['order']);
         $this->assertEquals($line_item->description, $json_response['description']);

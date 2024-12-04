@@ -10,7 +10,7 @@ use Exception;
 /**
  * Model of Add Line Item.
  */
-class AddLineItem extends SharedLineItem
+class LineItem extends SharedLineItem
 {
     public int $order;
     public string $description;
