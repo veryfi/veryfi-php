@@ -42,6 +42,7 @@ use veryfi\documents\ProcessDocumentBase64;
 use veryfi\documents\ProcessDocumentUrl;
 use veryfi\documents\tags\AddTag;
 use veryfi\documents\tags\AddTags;
+use veryfi\documents\tags\DeleteTag;
 use veryfi\documents\tags\DeleteTags;
 use veryfi\documents\tags\GetDocumentTags;
 use veryfi\documents\tags\GetTags;
@@ -167,7 +168,7 @@ class Client
     use DeleteCheck, GetCheck, GetChecks, ProcessCheck, ProcessCheckBase64, ProcessCheckUrl;
     use Exec, GetHeaders, GetUrl, GenerateSignature, Request, VeryfiSignature;
     use DeleteDocument, GetDocument, GetDocuments, ProcessDocument, ProcessDocumentBase64, ProcessDocumentUrl, UpdateDocument;
-    use AddTag, AddTags, DeleteTags, ReplaceTags, GetTags, GetDocumentTags;
+    use AddTag, AddTags, DeleteTags, ReplaceTags, GetTags, GetDocumentTags, DeleteTag;
     use DeleteW2, GetW2, GetW2s, ProcessW2, ProcessW2Base64, ProcessW2Url;
     use DeleteW8BENE, GetW8BENE, GetW8BENEs, ProcessW8BENE, ProcessW8BENEBase64, ProcessW8BENEUrl;
     use DeleteW9, GetW9, GetW9s, ProcessW9, ProcessW9Base64, ProcessW9Url;

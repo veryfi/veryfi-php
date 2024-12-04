@@ -95,7 +95,7 @@ final class ClientTest extends TestCase
         }
         $categories = array('Job Supplies');
         $file = $this->receipt_path;
-        $json_response = json_decode($veryfi_client->process_document($file, $categories, true), true);
+        $json_response = json_decode($veryfi_client->process_document_base64($file, $categories, true), true);
         $this->assertEquals(strtolower('walgreens'), strtolower($json_response['vendor']['name']));
     }
 
@@ -543,7 +543,7 @@ final class ClientTest extends TestCase
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
         $file = $this->w2_path;
-        $json_response = json_decode($veryfi_client->process_w2_document($file, true), true);
+        $json_response = json_decode($veryfi_client->process_w2_base64($file, true), true);
         $this->assertNotEmpty( $json_response['id']);
     }
 
@@ -567,7 +567,7 @@ final class ClientTest extends TestCase
         }
 
         $file = $this->any_doc_path;
-        $json_response = json_decode($veryfi_client->process_any_document($file, 'us_driver_license'), true);
+        $json_response = json_decode($veryfi_client->process_any_document_base64($file, 'us_driver_license'), true);
         $this->assertNotEmpty( $json_response['id']);
     }
 
@@ -591,7 +591,7 @@ final class ClientTest extends TestCase
         }
 
         $file = $this->bank_statement_path;
-        $json_response = json_decode($veryfi_client->process_bank_statement($file), true);
+        $json_response = json_decode($veryfi_client->process_bank_statement_base64($file), true);
         $this->assertNotEmpty( $json_response['id']);
     }
 
@@ -663,7 +663,7 @@ final class ClientTest extends TestCase
 
         $file_name = 'w2_form.pdf';
         $url = 'https://cdn.veryfi.com/wp-content/uploads/image.png';
-        $json_response = json_decode($veryfi_client->process_w2_document_from_url($file_name, $url, null, true), true);
+        $json_response = json_decode($veryfi_client->process_w2_from_url($file_name, $url, null, true), true);
         $this->assertNotEmpty( $json_response['id']);
     }
 
@@ -687,11 +687,11 @@ final class ClientTest extends TestCase
         } else {
             $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
         }
-        $json_response = json_decode($veryfi_client->get_w2_documents(), true);
+        $json_response = json_decode($veryfi_client->get_w2s(), true);
         $json_len = sizeof($json_response);
         $this->assertTrue($json_len > 1);
         $document_id = $json_response['results'][0]['id'];
-        $json_response = json_decode($veryfi_client->get_w2_document($document_id), true);
+        $json_response = json_decode($veryfi_client->get_w2($document_id), true);
         $this->assertNotEmpty( $json_response);
     }
 

@@ -9,7 +9,7 @@ trait GetW2s
      * @param array $kwargs Additional request parameters
      * @return string An array of JSON with all W2 documents.
      */
-    public function get_w2(int $page = null,  array $kwargs = []): string
+    public function get_w2s(int $page = null,  array $kwargs = []): string
     {
         $endpoint_name = '/w2s/';
         $request_arguments = array_merge([
