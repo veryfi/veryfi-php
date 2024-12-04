@@ -12,7 +12,7 @@ trait ProcessDocumentUrl
      * @param int $boost_mode Flag that tells Veryfi whether boost mode should be enabled. When set to 1, Veryfi will skip data enrichment steps, but will process the document faster. Default value for this flag is 0.
      * @param string|null $external_id Optional custom document identifier. Use this if you would like to assign your own ID to documents.
      * @param int|null $max_pages_to_process When sending a long document to Veryfi for processing, this parameter controls how many pages of the document will be read and processed, starting from page 1.
-     * @param array $additional_request_parameters Additional request parameters.
+     * @param array $kwargs Additional request parameters.
      * @return string Data extracted from the document.
      */
     public function process_document_url(string $file_url = null,
@@ -22,7 +22,7 @@ trait ProcessDocumentUrl
                                          int $boost_mode = 0,
                                          string $external_id = null,
                                          int $max_pages_to_process = null,
-                                         array $additional_request_parameters = array()): string
+                                         array $kwargs = array()): string
     {
         $endpoint_name = '/documents/';
         $request_arguments = array(
@@ -34,7 +34,7 @@ trait ProcessDocumentUrl
             'file_urls' => $file_urls,
             'max_pages_to_process' => $max_pages_to_process
         );
-        $request_arguments = array_replace($request_arguments, $additional_request_parameters);
+        $request_arguments = array_replace($request_arguments, $kwargs);
         return $this->request('POST', $endpoint_name, $request_arguments);
     }
 }

@@ -10,10 +10,10 @@ trait ProcessW2Url
      * @param array|null $file_urls List of publicly accessible URLs to multiple files
      * @param boolean $auto_delete Delete this document from Veryfi after data has been extracted
      * @param int $max_pages_to_process The number of pages to process for the document
-     * @param array $additional_request_parameters Additional request parameters
+     * @param array $kwargs Additional request parameters
      * @return string Data extracted from the document
      */
-    public function process_w2_document_from_url(string $file_name, string $file_url, array $file_urls = null, bool $auto_delete = false, int $max_pages_to_process = 1, array $additional_request_parameters = []): string
+    public function process_w2_document_from_url(string $file_name, string $file_url, array $file_urls = null, bool $auto_delete = false, int $max_pages_to_process = 1, array $kwargs = []): string
     {
         $endpoint_name = "/w2s/";
         $request_arguments = array_merge([
@@ -22,7 +22,7 @@ trait ProcessW2Url
             'file_url' => $file_url,
             'file_urls' => $file_urls,
             'max_pages_to_process' => $max_pages_to_process
-        ], $additional_request_parameters);
+        ], $kwargs);
 
         return $this->request("POST", $endpoint_name, $request_arguments);
     }

@@ -9,10 +9,10 @@ trait GetBankStatements
      * @param int $page_size The number of documents per page
      * @param boolean $bounding_boxes Return bounding box and bounding region for extracted fields
      * @param boolean $confidence_details Return the score and OCR score fields in the document response
-     * @param array $additional_request_parameters Additional request parameters
+     * @param array $kwargs Additional request parameters
      * @return string Object of previously processed bank statements
      */
-    public function get_bank_statements(int $page = 1, int $page_size = 50, bool $bounding_boxes = false, bool $confidence_details = false, array $additional_request_parameters = array()): string
+    public function get_bank_statements(int $page = 1, int $page_size = 50, bool $bounding_boxes = false, bool $confidence_details = false, array $kwargs = array()): string
     {
         $endpoint_name = "/bank-statements/";
         $request_arguments = array_merge([
@@ -20,7 +20,7 @@ trait GetBankStatements
             'page_size' => $page_size,
             'bounding_boxes' => $bounding_boxes,
             'confidence_details' => $confidence_details
-        ], $additional_request_parameters);
+        ], $kwargs);
         return $this->request("GET", $endpoint_name, $request_arguments);
     }
 }
