@@ -9,7 +9,7 @@ trait GetW2
      * @param array $kwargs Additional request parameters
      * @return string Data extracted from the document.
      */
-    public function get_w2_document(string $document_id,  array $kwargs = []): string
+    public function get_w2(string $document_id,  array $kwargs = []): string
     {
         $endpoint_name = "/w2s/{$document_id}/";
         $request_arguments = array_merge(['id' => $document_id], $kwargs);

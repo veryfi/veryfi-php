@@ -9,7 +9,7 @@ trait DeleteW2
      * @param array $kwargs Additional request parameters
      * @return string Data extracted from the document.
      */
-    public function delete_w2_document(string $document_id,  array $kwargs = []): string
+    public function delete_w2(string $document_id,  array $kwargs = []): string
     {
         $endpoint_name = "/w2s/{$document_id}/";
         $request_arguments = array_merge(['id' => $document_id], $kwargs);

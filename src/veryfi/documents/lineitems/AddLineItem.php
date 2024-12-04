@@ -1,6 +1,5 @@
 <?php
 namespace veryfi\documents\lineitems;
-use veryfi\LineItem;
 
 trait AddLineItem
 {

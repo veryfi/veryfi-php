@@ -13,7 +13,7 @@ trait ProcessW2Url
      * @param array $kwargs Additional request parameters
      * @return string Data extracted from the document
      */
-    public function process_w2_document_from_url(string $file_name, string $file_url, array $file_urls = null, bool $auto_delete = false, int $max_pages_to_process = 1, array $kwargs = []): string
+    public function process_w2_from_url(string $file_name, string $file_url, array $file_urls = null, bool $auto_delete = false, int $max_pages_to_process = 1, array $kwargs = []): string
     {
         $endpoint_name = "/w2s/";
         $request_arguments = array_merge([

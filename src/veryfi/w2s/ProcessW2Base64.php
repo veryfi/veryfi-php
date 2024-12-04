@@ -11,7 +11,7 @@ trait ProcessW2Base64
      * @param array $kwargs Additional request parameters.
      * @return string Data extracted from the document.
      */
-    public function process_w2_document_base64(string $file_path,
+    public function process_w2_base64(string $file_path,
                                         bool $auto_delete = false,
                                         int $max_pages_to_process = 1,
                                         array $kwargs = array()): string

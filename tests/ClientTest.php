@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 use veryfi\client;
-use veryfi\LineItemUpdate;
-use veryfi\LineItem;
+use veryfi\documents\lineitems\LineItem;
+use veryfi\documents\lineitems\LineItemUpdate;
 
 
 final class ClientTest extends TestCase

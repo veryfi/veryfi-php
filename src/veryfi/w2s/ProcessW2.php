@@ -13,7 +13,7 @@ trait ProcessW2
      * @param array $kwargs Additional request parameters.
      * @return string Data extracted from the document.
      */
-    public function process_w2_document(string $file_path,
+    public function process_w2(string $file_path,
                                         bool $auto_delete = false,
                                         int $max_pages_to_process = 1,
                                         array $kwargs = array()): string

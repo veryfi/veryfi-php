@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace veryfi;
+namespace veryfi\documents\lineitems;
 
 
 use Exception;
