@@ -6,7 +6,7 @@ require_once __DIR__ . '/ClientTestCase.php';
 
 class ClientChecksTest extends ClientTestCase
 {
-    public function test_process_check(): void
+    public function test_process_check_base64(): void
     {
         if ($this->mock_responses) {
             $veryfi_client = $this->getMockBuilder(Client::class)
@@ -27,6 +27,30 @@ class ClientChecksTest extends ClientTestCase
 
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_check_base64($file), true);
+        $this->assertNotEmpty($json_response['id']);
+    }
+
+    public function test_process_check(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/processCheck.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->atLeastOnce())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+
+        $file = $this->receipt_path;
+        $json_response = json_decode($veryfi_client->process_check($file), true);
         $this->assertNotEmpty($json_response['id']);
     }
 

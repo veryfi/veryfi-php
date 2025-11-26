@@ -54,7 +54,7 @@ class ClientDocumentsTest extends ClientTestCase
         $this->assertEquals($document_id, $json_response['id']);
     }
 
-    public function test_process_document(): void
+    public function test_process_document_base64(): void
     {
         if ($this->mock_responses) {
             $veryfi_client = $this->getMockBuilder(Client::class)
@@ -75,6 +75,30 @@ class ClientDocumentsTest extends ClientTestCase
         $categories = array('Job Supplies');
         $file = $this->receipt_path;
         $json_response = json_decode($veryfi_client->process_document_base64($file, $categories, true), true);
+        $this->assertEquals(strtolower('walgreens'), strtolower($json_response['vendor']['name']));
+    }
+
+    public function test_process_document(): void
+    {
+        if ($this->mock_responses) {
+            $veryfi_client = $this->getMockBuilder(Client::class)
+                ->onlyMethods(['exec_curl'])
+                ->setConstructorArgs([$this->client_id, $this->client_secret, $this->username, $this->api_key])
+                ->getMock();
+
+            $file_path = __DIR__ . '/resources/processDocument.json';
+            $file = fopen($file_path, 'r');
+            $file_data = mb_convert_encoding(fread($file, filesize($file_path)), 'UTF-8');
+            $veryfi_client->expects($this->once())
+                ->method('exec_curl')
+                ->willReturn($file_data);
+
+        } else {
+            $veryfi_client = new Client($this->client_id, $this->client_secret, $this->username, $this->api_key);
+        }
+        $categories = array('Job Supplies');
+        $file = $this->receipt_path;
+        $json_response = json_decode($veryfi_client->process_document($file, $categories), true);
         $this->assertEquals(strtolower('walgreens'), strtolower($json_response['vendor']['name']));
     }
 
