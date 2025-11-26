@@ -72,6 +72,12 @@ use veryfi\documents\lineitems\DeleteLineItems;
 use veryfi\documents\lineitems\GetLineItem;
 use veryfi\documents\lineitems\GetLineItems;
 use veryfi\documents\lineitems\UpdateLineItem;
+use veryfi\split\GetSplitDocument;
+use veryfi\split\GetSplitDocuments;
+use veryfi\split\ProcessSplitDocumentBase64;
+use veryfi\split\ProcessSplitDocumentUrl;
+use veryfi\classify\ProcessClassifyDocumentBase64;
+use veryfi\classify\ProcessClassifyDocumentUrl;
 
 
 
@@ -143,14 +149,15 @@ class Client
      * @param string $api_version Api version to use Veryfi, currently v8
      * @param int $api_timeout Api timeout for call Veryfi api, by default 120
      */
-    public function __construct(string $client_id,
-                                string $client_secret,
-                                string $username,
-                                string $api_key,
-                                string $base_url = 'https://api.veryfi.com/api/',
-                                string $api_version = 'v8',
-                                int    $api_timeout = 120)
-    {
+    public function __construct(
+        string $client_id,
+        string $client_secret,
+        string $username,
+        string $api_key,
+        string $base_url = 'https://api.veryfi.com/api/',
+        string $api_version = 'v8',
+        int $api_timeout = 120
+    ) {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->username = $username;
@@ -173,5 +180,7 @@ class Client
     use DeleteW8BENE, GetW8BENE, GetW8BENEs, ProcessW8BENE, ProcessW8BENEBase64, ProcessW8BENEUrl;
     use DeleteW9, GetW9, GetW9s, ProcessW9, ProcessW9Base64, ProcessW9Url;
     use AddLineItem, DeleteLineItem, DeleteLineItems, GetLineItem, GetLineItems, UpdateLineItem;
+    use GetSplitDocument, GetSplitDocuments, ProcessSplitDocumentBase64, ProcessSplitDocumentUrl;
+    use ProcessClassifyDocumentBase64, ProcessClassifyDocumentUrl;
 
 }

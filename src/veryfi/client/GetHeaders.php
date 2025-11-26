@@ -9,7 +9,7 @@ trait GetHeaders
     private function get_headers(): array
     {
         return array(
-            'User-Agent' => 'php veryfi-php/1.1.0',
+            'User-Agent' => 'php veryfi-php/1.0.5',
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Client-ID' => $this->client_id,
