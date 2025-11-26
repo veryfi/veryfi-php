@@ -1,6 +1,6 @@
 <?php
 
-use veryfi\client;
+use veryfi\Client;
 
 require_once __DIR__ . '/ClientTestCase.php';
 

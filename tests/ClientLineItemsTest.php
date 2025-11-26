@@ -1,6 +1,6 @@
 <?php
 
-use veryfi\client;
+use veryfi\Client;
 use veryfi\documents\lineitems\LineItem;
 use veryfi\documents\lineitems\LineItemUpdate;
 

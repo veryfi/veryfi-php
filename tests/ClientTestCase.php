@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use veryfi\client;
+use veryfi\Client;
 
 class ClientTestCase extends TestCase
 {
