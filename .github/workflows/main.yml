@@ -20,10 +20,7 @@ jobs:
           - ubuntu-latest
 
         php-version:
-          - "7.4"
-          - "8.0"
-          - "8.1"
-          - "8.2"
+          - "8.3"
 
     steps:
       - uses: actions/checkout@v2
@@ -47,7 +44,7 @@ jobs:
         run: cd metrics && python ./generate_badges.py && cd ..
 
       - name: Commit Code Coverage Image to Repo
-        if: matrix.php-version == '8.0'
+        if: matrix.php-version == '8.3'
         uses: EndBug/add-and-commit@v5
         with:
           author_name: Github actions
