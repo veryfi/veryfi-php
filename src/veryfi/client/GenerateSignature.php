@@ -13,9 +13,17 @@ trait GenerateSignature
     {
         $payload = "timestamp:$timestamp";
         foreach ($payload_params as $key => $value) {
-            if (gettype($value) == gettype(array())) {
+            // Handle CURLFile safely
+            if ($value instanceof \CURLFile) {
+                $value = method_exists($value, 'getFilename') ? $value->getFilename() : '';
+            } elseif (is_array($value)) {
                 $value = json_encode($value);
+            } elseif (is_object($value)) {
+                $value = method_exists($value, '__toString') ? (string) $value : json_encode($value);
+            } else {
+                $value = (string) $value;
             }
+
             $payload = "$payload,$key:$value";
         }
         $temporary_signature = hash_hmac('sha256', $payload, $this->client_secret, true);
