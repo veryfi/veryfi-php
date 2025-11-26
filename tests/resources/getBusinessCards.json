@@ -1,0 +1,15 @@
+{
+    "documents": [
+        {
+            "id": 123456789,
+            "document_type": "business_card",
+            "created_date": "2023-01-01 12:00:00",
+            "vendor": {
+                "name": "Business Card Vendor"
+            }
+        }
+    ],
+    "meta": {
+        "total_results": 1
+    }
+}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace veryfi;
+namespace veryfi\documents\lineitems;
 
 
 use Exception;
@@ -10,7 +10,7 @@ use Exception;
 /**
  * Model of Update Line Item.
  */
-class UpdateLineItem extends SharedLineItem
+class LineItemUpdate extends SharedLineItem
 {
     public ?int $order = null;
     public ?string $description = null;
