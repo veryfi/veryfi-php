@@ -1,0 +1,5 @@
+{
+  "name": "veryfi-php",
+  "user": "ubuntu",
+  "install": "php composer.phar install --prefer-dist --no-interaction"
+}
