@@ -1,0 +1,9 @@
+{
+  "name": "veryfi-php",
+  "user": "ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "install": "php composer.phar install --prefer-dist --no-interaction"
+}
