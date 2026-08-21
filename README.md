@@ -35,8 +35,8 @@ Below is the sample script using **Veryfi** to OCR and extract data from a docum
 require_once "path_to_your_vendor_autoload";
 
 // Then use the Veryfi API
-use veryfi\client;
-````
+use veryfi\Client;
+```
 ### Process a document
 ```php
 $client_id = 'your_client_id';
@@ -60,12 +60,65 @@ $username = 'your_username';
 $api_key = 'your_api_key';
 
 $veryfi_client = new Client($client_id, $client_secret, $username, $api_key);
-$document_id = 'your_document_id' //as int
+$document_id = 123456;
 $parameters = array('category' => 'Meals & Entertainment',
                     'total' => 11.23);
 $return_associative = true;
 $json_response = json_decode($veryfi_client->update_document($document_id, $parameters), $return_associative);
 ```
+
+### Search with pagination and filters
+```php
+$documents = json_decode($veryfi_client->get_documents(array(
+    'page' => 1,
+    'page_size' => 50,
+    'tag' => 'needs-review',
+    'track_total_results' => true,
+)), true);
+```
+
+### Process asynchronously
+```php
+$job = json_decode($veryfi_client->process_any_document_async(array(
+    'file_url' => 'https://example.com/document.pdf',
+    'blueprint_name' => 'driver-license',
+    'auto_delete' => false,
+)), true);
+```
+
+### Contracts and Markdown
+```php
+$contract = json_decode($veryfi_client->process_contract(array(
+    'file_url' => 'https://example.com/contract.pdf',
+    'max_pages_to_process' => 20,
+)), true);
+
+$markdown = json_decode($veryfi_client->process_markdown_document(array(
+    'file_url' => 'https://example.com/document.pdf',
+    'details' => true,
+)), true);
+```
+
+### Resource updates and tags
+```php
+$veryfi_client->update_check(123456, array('memo' => 'Invoice 1001'));
+$veryfi_client->add_bank_statement_tags(123456, array('reviewed', 'approved'));
+$tags = json_decode($veryfi_client->get_bank_statement_tags(123456), true);
+```
+
+### Settings and webhooks
+```php
+$webhook = json_decode(
+    $veryfi_client->add_webhook('https://example.com/veryfi-webhook'),
+    true
+);
+$api_keys = json_decode($veryfi_client->get_api_keys(), true);
+```
+
+All public operations use the same `Client`, authentication, raw JSON-string
+responses, and snake_case method naming. See
+[`docs/api-coverage-analysis.md`](docs/api-coverage-analysis.md) for the
+complete operation-to-method mapping.
 
 
 ## Need help?
