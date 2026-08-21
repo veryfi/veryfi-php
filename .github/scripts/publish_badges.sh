@@ -5,6 +5,8 @@
 # requests, so CI cannot commit the regenerated badges back to it.
 set -euo pipefail
 
+cd "$(git rev-parse --show-toplevel)"
+
 BRANCH="${BADGES_BRANCH:-badges}"
 AUTHOR_NAME="${BADGES_AUTHOR_NAME:-Github actions}"
 AUTHOR_EMAIL="${BADGES_AUTHOR_EMAIL:-veryfi@veryfi.com}"
