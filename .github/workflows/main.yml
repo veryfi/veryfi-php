@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
+concurrency:
+  group: main-update
+  cancel-in-progress: false
+
 jobs:
 
   tests:
@@ -23,7 +30,7 @@ jobs:
           - "8.3"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
@@ -43,13 +50,6 @@ jobs:
       - name: Generate Badges
         run: cd metrics && python ./generate_badges.py && cd ..
 
-      - name: Commit Code Coverage Image to Repo
+      - name: Publish Code Coverage Badges
         if: matrix.php-version == '8.3'
-        uses: EndBug/add-and-commit@v5
-        with:
-          author_name: Github actions
-          author_email: veryfi@veryfi.com
-          message: "Update report"
-          add: "./metrics"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./.github/scripts/publish_badges.sh

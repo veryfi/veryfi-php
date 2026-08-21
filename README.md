@@ -5,7 +5,8 @@ https://veryfi.github.io/veryfi-php/
 
 [![php - version](https://img.shields.io/badge/php->=7.4-8892BF)](https://www.php.net/releases/8.0/en.php)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![code coverage](./metrics/code_coverage.svg)](./metrics/code_coverage.svg)
+[![code coverage](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/code_coverage.svg)](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/code_coverage.svg)
+[![methods coverage](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/methods_coverage.svg)](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/methods_coverage.svg)
 
 
 **Veryfi** is a php module for communicating with the [Veryfi OCR API](https://veryfi.com/api/)
