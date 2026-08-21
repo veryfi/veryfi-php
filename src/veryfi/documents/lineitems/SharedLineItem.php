@@ -10,7 +10,11 @@ namespace veryfi\documents\lineitems;
 class SharedLineItem
 {
     public ?string $sku = null;
-    public ?string $category = null;
+    /**
+     * Category value accepted by the API (string or list depending on the model configuration).
+     * @var string|array|null
+     */
+    public $category = null;
     public ?float $tax = null;
     public ?float $price = null;
     public ?string $unit_of_measure = null;
@@ -23,4 +27,11 @@ class SharedLineItem
     public ?string $hsn = null;
     public ?string $section = null;
     public ?string $weight = null;
+    public ?string $expanded_description = null;
+    public ?string $brand = null;
+    /**
+     * Tags associated with the line item.
+     * @var string[]|null
+     */
+    public ?array $tags = null;
 }

@@ -25,7 +25,7 @@ trait ProcessAnyDocumentBase64
         $request_arguments = array(
             'file_name' => $file_name,
             'file_data' => $base64_with_hint,
-            'template_name' => $template_name,
+            'blueprint_name' => $template_name,
             'max_pages_to_process' => $max_pages_to_process
         );
         $request_arguments = array_replace($request_arguments, $kwargs);
