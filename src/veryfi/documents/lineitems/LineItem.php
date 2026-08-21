@@ -13,8 +13,10 @@ use Exception;
 class LineItem extends SharedLineItem
 {
     public int $order;
-    public string $description;
-    public float $total;
+    /** @var string|array */
+    public $description;
+    /** @var float|array */
+    public $total;
 
     /**
      * @param array $data json array to init the object.

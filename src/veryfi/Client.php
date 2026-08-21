@@ -78,6 +78,12 @@ use veryfi\split\ProcessSplitDocumentBase64;
 use veryfi\split\ProcessSplitDocumentUrl;
 use veryfi\classify\ProcessClassifyDocumentBase64;
 use veryfi\classify\ProcessClassifyDocumentUrl;
+use veryfi\classify\ExtractDocument;
+use veryfi\contracts\ContractOperations;
+use veryfi\fraud\FraudOperations;
+use veryfi\parse\ParseOperations;
+use veryfi\resources\SupportedResourceOperations;
+use veryfi\settings\SettingsOperations;
 
 
 
@@ -181,6 +187,7 @@ class Client
     use DeleteW9, GetW9, GetW9s, ProcessW9, ProcessW9Base64, ProcessW9Url;
     use AddLineItem, DeleteLineItem, DeleteLineItems, GetLineItem, GetLineItems, UpdateLineItem;
     use GetSplitDocument, GetSplitDocuments, ProcessSplitDocumentBase64, ProcessSplitDocumentUrl;
-    use ProcessClassifyDocumentBase64, ProcessClassifyDocumentUrl;
+    use ProcessClassifyDocumentBase64, ProcessClassifyDocumentUrl, ExtractDocument;
+    use SupportedResourceOperations, ContractOperations, ParseOperations, FraudOperations, SettingsOperations;
 
 }

@@ -28,6 +28,6 @@ trait ProcessW9
             'max_pages_to_process' => $max_pages_to_process
         );
         $request_arguments = array_replace($request_arguments, $kwargs);
-        return $this->request('POST', $endpoint_name, $request_arguments);
+        return $this->request('POST', $endpoint_name, $request_arguments, true);
     }
 }
