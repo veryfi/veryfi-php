@@ -204,12 +204,20 @@ class ClientApiParityTest extends TestCase
     {
         $line_item = new LineItem([
             'order' => 1,
-            'description' => 'Item',
-            'total' => 10.0,
+            'description' => ['value' => 'Item'],
+            'total' => ['value' => 10.0],
             'expanded_description' => 'Expanded item',
             'brand' => 'Veryfi',
             'category' => ['Supplies'],
             'tags' => ['reviewed'],
+            'country_of_origin' => ['value' => 'US'],
+            'discount_price' => ['value' => 8.0],
+            'lot' => ['value' => 'LOT-1'],
+            'product_info' => ['brand' => 'Veryfi'],
+            'tax_code' => ['value' => 'VAT'],
+            'manufacturer' => ['value' => 'Veryfi'],
+            'subtotal' => ['value' => 8.0],
+            'type' => ['value' => 'product'],
         ]);
         $update = new LineItemUpdate([
             'brand' => 'Updated',
@@ -218,6 +226,8 @@ class ClientApiParityTest extends TestCase
 
         $this->assertSame(['Supplies'], $line_item->category);
         $this->assertSame(['reviewed'], $line_item->tags);
+        $this->assertSame(['value' => 'Item'], $line_item->description);
+        $this->assertSame(['value' => 'VAT'], $line_item->tax_code);
         $this->assertSame('Updated', $update->brand);
         $this->assertSame(['approved'], $update->tags);
     }
