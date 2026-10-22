@@ -27,7 +27,7 @@ jobs:
           - ubuntu-latest
 
         php-version:
-          - "8.3"
+          - "8.5.12"
 
     steps:
       - uses: actions/checkout@v5
@@ -51,5 +51,5 @@ jobs:
         run: cd metrics && python ./generate_badges.py && cd ..
 
       - name: Publish Code Coverage Badges
-        if: matrix.php-version == '8.3'
+        if: matrix.php-version == '8.5.12'
         run: ./.github/scripts/publish_badges.sh

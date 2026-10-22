@@ -15,13 +15,13 @@ trait ProcessDocumentUrl
      * @param array $kwargs Additional request parameters.
      * @return string Data extracted from the document.
      */
-    public function process_document_url(string $file_url = null,
-                                         array $file_urls = null,
-                                         array $categories = null,
+    public function process_document_url(?string $file_url = null,
+                                         ?array $file_urls = null,
+                                         ?array $categories = null,
                                          bool $auto_delete = false,
                                          int $boost_mode = 0,
-                                         string $external_id = null,
-                                         int $max_pages_to_process = null,
+                                         ?string $external_id = null,
+                                         ?int $max_pages_to_process = null,
                                          array $kwargs = array()): string
     {
         $endpoint_name = '/documents/';

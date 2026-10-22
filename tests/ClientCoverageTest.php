@@ -52,7 +52,6 @@ class ClientCoverageTest extends TestCase
 
         $reflection = new ReflectionClass(Client::class);
         $method = $reflection->getMethod('generate_signature');
-        $method->setAccessible(true);
 
         $timestamp = '1234567890';
 
