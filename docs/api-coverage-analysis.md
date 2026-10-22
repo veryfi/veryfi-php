@@ -1,6 +1,6 @@
 # Veryfi PHP SDK — Official API Coverage Analysis
 
-**SDK:** `veryfi/veryfi-php` (PHP >= 7.4)
+**SDK:** `veryfi/veryfi-php` (PHP >= 8.5.12)
 
 **Source of truth:** [https://docs.veryfi.com/](https://docs.veryfi.com/) (sitemap retrieved 2026-08-21)
 

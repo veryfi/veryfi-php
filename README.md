@@ -3,7 +3,7 @@ https://veryfi.github.io/veryfi-php/
 <img src="https://user-images.githubusercontent.com/30125790/212157461-58bdc714-2f89-44c2-8e4d-d42bee74854e.png#gh-dark-mode-only" width="200">
 <img src="https://user-images.githubusercontent.com/30125790/212157486-bfd08c5d-9337-4b78-be6f-230dc63838ba.png#gh-light-mode-only" width="200">
 
-[![php - version](https://img.shields.io/badge/php->=7.4-8892BF)](https://www.php.net/releases/8.0/en.php)
+[![php - version](https://img.shields.io/badge/php->=8.5.12-8892BF)](https://www.php.net/releases/8.5/en.php)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![code coverage](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/code_coverage.svg)](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/code_coverage.svg)
 [![methods coverage](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/methods_coverage.svg)](https://raw.githubusercontent.com/veryfi/veryfi-php/badges/metrics/methods_coverage.svg)
