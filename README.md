@@ -53,6 +53,11 @@ $delete_after_processing = false;
 $json_response = json_decode($veryfi_client->process_document($file, $categories, $delete_after_processing), $return_associative);
 ``` 
 
+Run thinking on the line items with `thinking` (`'light'` or `'deep'`; leave it `null` to turn it off). `process_document`, `process_document_base64` and `process_document_url` accept it as the last argument, and `'deep'` takes longer than `'light'`. It only takes effect if thinking mode is enabled for your account.
+```php
+$json_response = json_decode($veryfi_client->process_document($file, $categories, $delete_after_processing, thinking: 'light'), $return_associative);
+```
+
 ### Update a document
 ```php
 $client_id = 'your_client_id';
