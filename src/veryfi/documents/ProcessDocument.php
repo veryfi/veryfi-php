@@ -10,13 +10,15 @@ trait ProcessDocument
      * @param string $file_path Path on disk to a file to submit for data extraction.
      * @param array|string[] $categories Array of categories Veryfi can use to categorize the document.
      * @param bool $auto_delete Delete this document from Veryfi after data has been extracted.
-     * @param array $kwargs Additional request parameters.
+     * @param array $kwargs Additional request parameters. `thinking` may also be passed here.
+     * @param string|null $thinking Optional Thinking Mode for receipts and invoices. `light` runs a quick agent review and `deep` runs a thorough review. Omit it to use the standard pipeline. https://docs.veryfi.com/api/receipts-invoices/process-a-document/
      * @return string Data extracted from the document.
      */
     public function process_document(string $file_path,
                                      array $categories = array(),
                                      bool $auto_delete = false,
-                                     array $kwargs = array()): string
+                                     array $kwargs = array(),
+                                     ?string $thinking = null): string
     {
         $endpoint_name = '/documents/';
         $file_name = pathinfo($file_path, PATHINFO_BASENAME);
@@ -28,6 +30,9 @@ trait ProcessDocument
             'auto_delete' => $auto_delete
         );
         $request_arguments = array_replace($request_arguments, $kwargs);
+        if ($thinking !== null) {
+            $request_arguments['thinking'] = $thinking;
+        }
         return $this->request('POST', $endpoint_name, $request_arguments, true);
     }
 }

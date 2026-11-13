@@ -231,4 +231,117 @@ class ClientApiParityTest extends TestCase
         $this->assertSame('Updated', $update->brand);
         $this->assertSame(['approved'], $update->tags);
     }
+
+    public function test_process_document_url_sends_thinking(): void
+    {
+        $client = $this->documentClient();
+        $client->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '/documents/',
+                $this->callback(function (array $body): bool {
+                    return $body['file_url'] === 'https://example.test/invoice.pdf'
+                        && $body['thinking'] === 'light';
+                })
+            )
+            ->willReturn('{}');
+
+        $this->assertSame('{}', $client->process_document_url(
+            file_url: 'https://example.test/invoice.pdf',
+            thinking: 'light'
+        ));
+    }
+
+    public function test_process_document_url_omits_thinking_by_default(): void
+    {
+        $client = $this->documentClient();
+        $client->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '/documents/',
+                $this->callback(fn(array $body): bool => !array_key_exists('thinking', $body))
+            )
+            ->willReturn('{}');
+
+        $this->assertSame('{}', $client->process_document_url(
+            file_url: 'https://example.test/invoice.pdf'
+        ));
+    }
+
+    public function test_named_thinking_overrides_kwargs(): void
+    {
+        $client = $this->documentClient();
+        $client->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '/documents/',
+                $this->callback(fn(array $body): bool => $body['thinking'] === 'deep')
+            )
+            ->willReturn('{}');
+
+        $this->assertSame('{}', $client->process_document_url(
+            file_url: 'https://example.test/invoice.pdf',
+            kwargs: ['thinking' => 'light'],
+            thinking: 'deep'
+        ));
+    }
+
+    public function test_process_document_sends_thinking_with_the_file(): void
+    {
+        $client = $this->documentClient();
+        $client->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '/documents/',
+                $this->callback(function (array $body): bool {
+                    return $body['file'] instanceof CURLFile && $body['thinking'] === 'deep';
+                }),
+                true
+            )
+            ->willReturn('{}');
+
+        $this->assertSame('{}', $client->process_document(
+            __DIR__ . '/resources/receipt.jpg',
+            [],
+            false,
+            [],
+            'deep'
+        ));
+    }
+
+    public function test_process_document_base64_accepts_thinking_from_kwargs(): void
+    {
+        $client = $this->documentClient();
+        $client->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '/documents/',
+                $this->callback(function (array $body): bool {
+                    return is_string($body['file_data'])
+                        && str_contains($body['file_data'], 'base64,')
+                        && $body['thinking'] === 'light';
+                })
+            )
+            ->willReturn('{}');
+
+        $this->assertSame('{}', $client->process_document_base64(
+            __DIR__ . '/resources/receipt.jpg',
+            [],
+            false,
+            ['thinking' => 'light']
+        ));
+    }
+
+    private function documentClient(): Client
+    {
+        return $this->getMockBuilder(Client::class)
+            ->onlyMethods(['request'])
+            ->setConstructorArgs(['client', 'secret', 'user', 'key'])
+            ->getMock();
+    }
 }
