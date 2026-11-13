@@ -51,7 +51,18 @@ $file = 'path_to_your_image';
 $return_associative = true;
 $delete_after_processing = false;
 $json_response = json_decode($veryfi_client->process_document($file, $categories, $delete_after_processing), $return_associative);
-``` 
+```
+
+### Process a receipt or invoice with Thinking Mode
+
+`thinking` is optional and applies to receipts and invoices. Pass `light` for a quick agent review or `deep` for a thorough review. Leave it out to use the standard pipeline. The same argument is available on `process_document()`, `process_document_base64()`, and `process_document_url()`, and it can also be sent inside `$kwargs`.
+
+```php
+$json_response = json_decode($veryfi_client->process_document_url(
+    file_url: 'https://example.com/invoice.pdf',
+    thinking: 'light'
+), true);
+```
 
 ### Update a document
 ```php

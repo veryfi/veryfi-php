@@ -239,7 +239,8 @@ Additional public helpers that are **not** extra API operations (same method+rou
 
 - The original 69 regression tests remain in place.
 - `ClientApiParityTest` provides one method/route/request-contract test for each of the 103 formerly missing operations.
-- Parameter-level regressions cover query-string encoding, AnyDocs `blueprint_name`, W-2/W-9/classify/split multipart behavior, and line-item fields.
+- Parameter-level regressions cover query-string encoding, AnyDocs `blueprint_name`, W-2/W-9/classify/split multipart behavior, line-item fields, and the optional `thinking` argument on receipt and invoice processing.
+- `process_document()`, `process_document_base64()`, and `process_document_url()` accept optional `thinking` (`light` or `deep`) for Thinking Mode. Omitting it leaves the standard pipeline unchanged. Documented at [Process a Document](https://docs.veryfi.com/api/receipts-invoices/process-a-document/) and [Thinking Mode](https://faq.veryfi.com/en/articles/18356750-what-is-thinking-mode-and-how-do-i-use-it).
 
 ### PHPDoc / README
 
